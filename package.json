@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "name": "raivis.com",
+  "main": "Gruntfile.js",
+  "author": {
+    "name": "Raivis Vitols",
+    "url": "https://raivis.com"
+  },
+  "devDependencies": {
+    "grunt": "~1.0.1",
+    "grunt-sass": "~2.0.0",
+    "grunt-autoprefixer": "~3.0.4",
+    "grunt-contrib-watch": "~1.0.0"
+  }
+}
