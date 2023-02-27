@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="remote_mapper" />
     <orderEntry type="module" module-name="ML_paper_list" />
+    <orderEntry type="module" module-name="EPI_problems" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="pytest" />
