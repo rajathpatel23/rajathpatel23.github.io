@@ -1,0 +1,132 @@
+baseURL = "https://rajathpatel23.github.io/"
+languageCode = "en-us"
+title = "Rajat Patel"
+theme = "PaperMod"
+
+# Enable features
+enableGitInfo = false
+enableEmoji = true
+enableRobotsTXT = true
+
+# Menu configuration
+[menu]
+  [[menu.main]]
+    identifier = 'home'
+    name = 'Home'
+    url = '/'
+    weight = 1
+  
+  [[menu.main]]
+    identifier = 'blog'
+    name = 'Blog'
+    url = '/posts/'
+    weight = 2
+  
+  [[menu.main]]
+    identifier = 'research'
+    name = 'Research'
+    url = '/research/'
+    weight = 3
+  
+  [[menu.main]]
+    identifier = 'projects'
+    name = 'Projects'
+    url = '/projects/'
+    weight = 4
+  
+  [[menu.main]]
+    identifier = 'vitae'
+    name = 'CV'
+    url = '/vitae/'
+    weight = 5
+
+# PaperMod theme configuration
+[params]
+  # Site features
+  env = "production"
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  UseHugoToc = true
+  disableSpecial1stPost = false
+  disableScrollToTop = false
+  comments = false
+  hidemeta = false
+  hideSummary = false
+  showtoc = false
+  tocopen = false
+  
+  # Math support
+  math = true
+  
+  # Custom CSS
+  customCSS = true
+
+# Social icons
+[[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/rajathpatel23"
+
+[[params.socialIcons]]
+  name = "linkedin" 
+  url = "https://www.linkedin.com/in/rajat-patel/"
+
+[[params.socialIcons]]
+  name = "twitter"
+  url = "https://twitter.com/patel_raj55"
+
+[[params.socialIcons]]
+  name = "email"
+  url = "mailto:rpatel12@umbc.edu"
+
+[params.fuseOpts]
+  isCaseSensitive = false
+  shouldSort = true
+  location = 0
+  distance = 1000
+  threshold = 0.4
+  minMatchCharLength = 0
+  keys = ["title", "permalink", "summary", "content"]
+
+# Markup configuration
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+# Output formats
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+# Privacy configuration
+[privacy]
+  [privacy.vimeo]
+    disabled = false
+    simple = true
+
+  [privacy.twitter]
+    disabled = false
+    enableDNT = true
+    simple = true
+
+  [privacy.instagram]
+    disabled = false
+    simple = true
+
+  [privacy.youtube]
+    disabled = false
+    privacyEnhanced = true
+
+# Sitemap configuration
+[sitemap]
+  changefreq = 'monthly'
+  filename = 'sitemap.xml'
+  priority = 0.5
+
+# Pagination
+[pagination]
+  pagerSize = 10

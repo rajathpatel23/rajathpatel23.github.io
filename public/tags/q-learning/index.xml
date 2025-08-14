@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Q-Learning on Rajat Patel</title>
+    <link>http://localhost:1313/tags/q-learning/</link>
+    <description>Recent content in Q-Learning on Rajat Patel</description>
+    <generator>Hugo -- 0.148.2</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 13 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/q-learning/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reinforcement Learning Foundations: From MDPs to Deep Q-Learning</title>
+      <link>http://localhost:1313/posts/reinforcement-learning-foundations/</link>
+      <pubDate>Wed, 13 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/reinforcement-learning-foundations/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Reinforcement Learning (RL) has exploded in popularity — first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don&amp;rsquo;t just help models learn context better; they also improve reasoning by teaching them to &amp;ldquo;think in steps.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;My fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called &amp;ldquo;tool of the decade.&amp;rdquo; I wanted to go beyond using these models — I wanted to understand &lt;em&gt;how&lt;/em&gt; they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

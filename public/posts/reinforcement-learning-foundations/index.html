@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Reinforcement Learning Foundations: From MDPs to Deep Q-Learning | Rajat Patel</title>
+<meta name="keywords" content="machine-learning, reinforcement-learning, deep-learning, mdp, q-learning">
+<meta name="description" content="Introduction
+Reinforcement Learning (RL) has exploded in popularity — first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don&rsquo;t just help models learn context better; they also improve reasoning by teaching them to &ldquo;think in steps.&rdquo;
+My fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called &ldquo;tool of the decade.&rdquo; I wanted to go beyond using these models — I wanted to understand how they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/reinforcement-learning-foundations/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.9e55729625902ce7e4a6e19f1f9f6b97a43813001afe9035984aa50c7fe9ede9.css" integrity="sha256-nlVyliWQLOfkpuGfH59rl6Q4EwAa/pA1mEqlDH/p7ek=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/reinforcement-learning-foundations/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          
+          
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          
+          throwOnError : false
+        });
+    });
+</script> <meta property="og:url" content="http://localhost:1313/posts/reinforcement-learning-foundations/">
+  <meta property="og:site_name" content="Rajat Patel">
+  <meta property="og:title" content="Reinforcement Learning Foundations: From MDPs to Deep Q-Learning">
+  <meta property="og:description" content="Introduction Reinforcement Learning (RL) has exploded in popularity — first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don’t just help models learn context better; they also improve reasoning by teaching them to “think in steps.”
+My fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called “tool of the decade.” I wanted to go beyond using these models — I wanted to understand how they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-08-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-08-13T00:00:00+00:00">
+    <meta property="article:tag" content="Machine-Learning">
+    <meta property="article:tag" content="Reinforcement-Learning">
+    <meta property="article:tag" content="Deep-Learning">
+    <meta property="article:tag" content="Mdp">
+    <meta property="article:tag" content="Q-Learning">
+    <meta property="og:image" content="http://localhost:1313/img/project_images/Know_rep.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://localhost:1313/img/project_images/Know_rep.png">
+<meta name="twitter:title" content="Reinforcement Learning Foundations: From MDPs to Deep Q-Learning">
+<meta name="twitter:description" content="Introduction
+Reinforcement Learning (RL) has exploded in popularity — first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don&rsquo;t just help models learn context better; they also improve reasoning by teaching them to &ldquo;think in steps.&rdquo;
+My fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called &ldquo;tool of the decade.&rdquo; I wanted to go beyond using these models — I wanted to understand how they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Blog",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Reinforcement Learning Foundations: From MDPs to Deep Q-Learning",
+      "item": "http://localhost:1313/posts/reinforcement-learning-foundations/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Reinforcement Learning Foundations: From MDPs to Deep Q-Learning",
+  "name": "Reinforcement Learning Foundations: From MDPs to Deep Q-Learning",
+  "description": "Introduction Reinforcement Learning (RL) has exploded in popularity — first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don\u0026rsquo;t just help models learn context better; they also improve reasoning by teaching them to \u0026ldquo;think in steps.\u0026rdquo;\nMy fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called \u0026ldquo;tool of the decade.\u0026rdquo; I wanted to go beyond using these models — I wanted to understand how they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.\n",
+  "keywords": [
+    "machine-learning", "reinforcement-learning", "deep-learning", "mdp", "q-learning"
+  ],
+  "articleBody": "Introduction Reinforcement Learning (RL) has exploded in popularity — first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don’t just help models learn context better; they also improve reasoning by teaching them to “think in steps.”\nMy fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called “tool of the decade.” I wanted to go beyond using these models — I wanted to understand how they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.\nThis post is the first in a series where we’ll start with foundations:\nWhat is an MDP and how does it differ from an HMM? How do rewards and value functions actually work? How can we move from knowing state values to learning optimal actions with Q-learning? And how do we scale that to Deep Q-Learning when the state space explodes? By the end, you’ll have a baseline RL toolkit — from mathematical definitions to runnable code — and a clear picture of how these pieces fit together when building agents.\nWhy This Series? When I first encountered MDPs, I assumed they were simply an extension of Hidden Markov Models. I quickly learned this was wrong. HMMs deal with hidden states and observations, while MDPs deal with fully observable states and decision-making under uncertainty. Understanding this difference changed how I approached RL problems.\nThis blog is written in a learning-by-doing style — meaning you’ll see the concepts, math, and code side by side, along with real-world analogies (including fraud detection examples) and small “try-it-yourself” prompts.\nPart 1: Foundations with MDPs (and a “HMM aside”) Markov Decision Process (MDP) Markov Decision Process (MDP) models an agent interacting with an environment over discrete time steps. It’s defined by the 5-tuple $(S, A, P, R, \\gamma)$ where:\n$S$ = states $A$ = actions $P(s’|s,a)$ = transition probability of reaching $s’$ after taking action $a$ in state $s$ $R(s,a,s’)$ = reward for this transition $\\gamma \\in [0,1)$ = discount factor for future rewards The Markov Property The future is conditionally independent of the past, given the present state.\nFormally: $$P(s_{t+1} | s_t, a_t, s_{t-1}, \\ldots) = P(s_{t+1} | s_t, a_t)$$\nWhy MDPs Matter They formalize sequential decision making: robotics, games, recommendation systems. They give a clear mathematical foundation for defining and solving RL problems via value functions, policy search, and dynamic programming. How do Markov Decision Processes differ from Hidden Markov Models HMMs deal with partial observability (you only see observations, not the actual underlying states). The context window for HMMs is technically just 1 since they’re first-order Markov models, meaning they depend only on the current hidden state. HMM vs MDPs Aspect HMM MDP State Hidden (unobserved) Fully observed Observations Emitted from hidden states Not applicable (agent directly observes state) Actions No actions; just a generative sequence model Agent chooses actions $a$ in each state $s$ Transition Model $P(h_{t+1} h_t)$ Emission/Reward Emission: $P(o_t h_t)$ Objective Compute likelihood or decode hidden path Maximize expected cumulative reward Algorithms Forward/backward; Viterbi; Baum–Welch (EM) Value iteration; policy iteration; Q-learning; policy gradients Use Cases Sequence labeling (speech, POS, bioinfo) Sequential decision-making (robotics, games, control) Reward Functions Definition A reward function tells you how “good” a single transition is. Formally:\n$$R(s,a,s’) = \\text{expected immediate reward when you take action } a \\text{ in state } s \\text{ and end up in } s’$$\nSymbol Meaning $s$ Current state $a$ Action taken $s'$ Next state $R(s,a,s’)$ Reward you get for that $(s \\to s’)$ transition Intuition In a game, you might get +10 points for eating a pellet or –100 if you hit a ghost. In finance, you might receive +$5 if a trade succeeds or –$2 if it fails. In fraud detection, you might get +$10 if you correctly detect fraud, -$100 if you miss fraud, -$20 for a false positive, and +$5 if you correctly detect non-fraud. State-Value Function $V^\\pi(s)$ Under a given policy $\\pi$, the value of a state $s$ is the expected, discounted sum of future rewards when you start in $s$ and follow $\\pi$:\n$$V^\\pi(s) = \\mathbb{E}\\pi\\left[\\sum{t=0}^{\\infty}\\gamma^t r_{t+1} \\mid S_0=s\\right]$$\n$\\gamma$ trades off immediate vs. long-term reward. High $V^\\pi(s)$ means “good to be here under $\\pi$” $r_{t+1} = R(S_t, A_t, S_{t+1})$ $\\mathbb{E}$ = average over all possible futures under $\\pi$ Action Value Function $Q^\\pi(s,a)$ $Q^\\pi(s, a)$ is the expected (average) discounted return if you take action $a$ in state $s$ now and then follow the policy $\\pi$ afterwards.\nWhy do we need the Action-Value function $Q(s,a)$? Short answer:\nBecause if you only know how good a state is (that’s $V(s)$), you still don’t know which action to take from that state without either (a) a model of the world to look ahead, or (b) evaluating every action by trial. $Q(s,a)$ tells you the expected return if you take action $a$ now in state $s$, then behave well after. That lets you pick the best action locally without a model.\nIntuition (intersection analogy) You’re at a road intersection (state $s$). Knowing “this intersection is promising” (high $V(s)$) doesn’t tell you whether to turn left or right. The thing you actually need at the decision point is: “If I turn left right now, how good is that?” That number is $Q(s,\\text{left})$. Likewise for right.\n$$Q^\\pi(s,a) = \\mathbb{E}\\pi\\left[\\sum{k=0}^{\\infty}\\gamma^k r_{t+1+k} \\mid S_t=s, A_t=a\\right]$$\nAction-Value as an Expectation (from returns to Bellman) TL;DR:\nWe turn the scary infinite return into a local recursion: “reward now + discounted value later,” averaged over what can happen next. This uses two facts:\nthe law of total expectation the Markov property Step 1: Start from the definition (returns view)\n$$Q^\\pi(s,a) = \\mathbb{E}\\pi\\left[\\sum{k=0}^{\\infty}\\gamma^k r_{t+1+k} \\mid S_t=s, A_t=a\\right]$$\nStep 2: Peel off one step\nSeparate the immediate reward from everything after:\n$$Q^\\pi(s,a) = \\mathbb{E}\\left[r_{t+1} + \\gamma G_{t+1} \\mid S_t=s, A_t=a\\right]$$\nwhere $G_{t+1} = \\sum_{k=0}^{\\infty}\\gamma^k r_{t+2+k}$ is “the return starting next step.”\nStep 3: Condition on the next state $s’$ (law of total expectation)\n$$Q^\\pi(s,a) = \\mathbb{E}{s’ \\sim P(\\cdot|s,a)}\\left[\\mathbb{E}\\left[r{t+1} + \\gamma G_{t+1} \\mid S_t=s,A_t=a,S_{t+1}=s’\\right]\\right]$$\nStep 4: Use the Markov property (make it local)\nGiven $(s,a,s’)$:\nImmediate reward depends only on that transition: $\\mathbb{E}[r_{t+1}|s,a,s’] = R(s,a,s’)$ The future return depends only on the next state (and then following $\\pi$): $\\mathbb{E}[G_{t+1}|S_{t+1}=s’] = V^\\pi(s’)$ So the inner expectation becomes $R(s,a,s’) + \\gamma V^\\pi(s’)$, yielding:\n$$Q^\\pi(s,a) = \\mathbb{E}_{s’ \\sim P(\\cdot|s,a)}\\big[R(s,a,s’) + \\gamma V^\\pi(s’)\\big]$$\nStep 5: Expand $V^\\pi$ over next actions\nBy definition of the state value: $V^\\pi(s’) = \\sum_{a’} \\pi(a’|s’) Q^\\pi(s’,a’)$\nPutting it all together gives the Bellman expectation equation for $Q^\\pi$:\n$$\\boxed{Q^\\pi(s,a) = \\sum_{s’} P(s’|s,a)\\Big[R(s,a,s’) + \\gamma \\sum_{a’} \\pi(a’|s’) Q^\\pi(s’,a’)\\Big]}$$\nSimple toy example From state $s$, action $a$ leads to:\n$s_1$ with prob 0.7, reward 5 $s_2$ with prob 0.3, reward 0 Let $\\gamma=0.9$, and suppose $V^\\pi(s_1)=10$ and $V^\\pi(s_2)=2$. Then:\n$$\\begin{align} Q^\\pi(s,a) \u0026= 0.7(5 + 0.9 \\times 10) + 0.3(0 + 0.9 \\times 2) \\ \u0026= 0.7(14) + 0.3(1.8) \\ \u0026= 9.8 + 0.54 \\ \u0026= \\mathbf{10.34} \\end{align}$$\nIt’s a weighted average of “reward now + discounted value later” over possible next states.\nQ-Learning Knowing state value is great—if you also have a model of the world to look ahead. But when you don’t, you want to know directly: How good is taking action a in state s right now? That’s the action-value ($Q(s,a)$), and Q-learning learns it from experience with no model required.\nTabular Q-Learning — from optimality to an update you can code 1) Objective: optimal action-values $$Q^(s,a) = \\sum_{s’} P(s’|s,a)\\Big[R(s,a,s’) + \\gamma \\max_{a’} Q^(s’,a’)\\Big]$$\nThis is the Bellman optimality equation. If we had $Q^$, the greedy policy $\\pi^(s) = \\operatorname*{argmax}_a Q^*(s,a)$ is optimal.\n2) One-step TD target (what we aim at each step) Replace the expectation over $s’$ with a sample from the environment:\n$$y_{\\text{target}} = r + \\gamma \\max_{a’} Q(s’,a’)$$\nThis is a sampled estimate of the right-hand side of Bellman optimality.\n3) Q-learning update (move toward the target) $$Q(s,a) \\leftarrow Q(s,a) + \\alpha \\Big[r + \\gamma \\max_{a’} Q(s’,a’) - Q(s,a)\\Big]$$\n$\\alpha$ is the learning rate We bootstrap using our own $Q$ on $s'$ Using $\\max_{a’}$ (rather than the next action actually taken) makes Q-learning off-policy: it learns about the greedy policy even if behavior is exploratory 4) Exploration: ε-greedy behavior policy We still need to visit state-actions to learn them:\nWith probability ε: take a random action (explore) Otherwise: take $\\operatorname*{argmax}_a Q(s,a)$ (exploit) Typical schedule: start ε at 1.0, decay to 0.1 (or 0.01) over many episodes.\n5) Tiny numeric example (feel the TD step) Suppose at $(s,a)$ you observe:\nreward $r=1.0$, next state $s'$ current $Q(s,a)=0.50$ $\\max_{a’} Q(s’,a’) = 0.80$ $\\gamma=0.9$, $\\alpha=0.5$ Target: $y = r + \\gamma \\max_{a’} Q(s’,a’) = 1.0 + 0.9 \\times 0.80 = 1.72$\nUpdate: $Q_{\\text{new}}(s,a) = 0.50 + 0.5 \\times (1.72 - 0.50) = \\mathbf{1.11}$\nYou’ve moved halfway toward the target.\n6) SARSA vs Expected SARSA vs Q-learning (quick contrast) SARSA (on-policy) uses the actual next action $a’ \\sim \\pi$: $$Q \\leftarrow Q + \\alpha[r + \\gamma Q(s’,a’) - Q]$$ Expected SARSA computes the average over next actions: $$Q \\leftarrow Q + \\alpha[r + \\gamma \\sum_{a’} \\pi(a’|s’)Q(s’,a’) - Q]$$ Q-learning (off-policy) uses the max over actions: $$Q \\leftarrow Q + \\alpha[r + \\gamma \\max_{a’} Q(s’,a’) - Q]$$ 7) Minimal NumPy implementation (FrozenLake, tabular) import numpy as np, gym env = gym.make('FrozenLake-v1', is_slippery=False) nS, nA = env.observation_space.n, env.action_space.n Q = np.zeros((nS, nA)) alpha, gamma = 0.8, 0.9 eps, eps_min, eps_decay = 1.0, 0.1, 0.995 episodes = 2000 def eps_greedy(s): if np.random.rand() \u003c eps: return env.action_space.sample() return np.argmax(Q[s]) for ep in range(episodes): s, done = env.reset(), False while not done: a = eps_greedy(s) s2, r, done, _ = env.step(a) target = r + (0 if done else gamma * np.max(Q[s2])) Q[s, a] += alpha * (target - Q[s, a]) s = s2 eps = max(eps_min, eps * eps_decay) print(\"Q-table:\\n\", Q) Terminal states: if done, set the bootstrapped term to 0 (as above).\nDeep Q-Learning Q-learning works only to an extent where it is possible to keep track of states and actions at a given time. However, as we move away from simple games like tic-tac-toe to something as complex as Chess, the number of states and actions at a given time increases exponentially. At that stage, keeping track of a Q-table becomes very compute intensive, doesn’t scale well, and is very slow. Hence, the paradigm of Deep Q-learning provides the potential to overcome this barrier.\nTabular methods break when the state space is huge. DQN replaces the table with a neural net $Q_\\theta(s,a)$ that outputs all action values from a state.\nCore ideas (why DQN works) Function approximation: $Q_\\theta(s,a)$ via a neural net Experience replay: Store $(s,a,r,s’,\\text{done})$ transitions, train on random mini‑batches to break correlation Loss and targets For a batch $\\mathcal{B}$ of transitions:\n$$y_i = \\left{ \\begin{array}{ll} r_i \u0026 \\text{if } \\text{done}i \\ r_i + \\gamma \\max{a’} Q_{\\theta^-}(s’_i, a’) \u0026 \\text{otherwise} \\end{array} \\right.$$\nSquared loss (often Huber in practice):\n$$\\mathcal{L}(\\theta) = \\frac{1}{|\\mathcal{B}|}\\sum_{i \\in \\mathcal{B}} \\big( y_i - Q_\\theta(s_i, a_i) \\big)^2$$\nGradient step: $\\theta \\leftarrow \\theta - \\eta \\nabla_\\theta \\mathcal{L}(\\theta)$\nTarget network update (periodic hard update every $C$ steps): $\\theta^- \\leftarrow \\theta$\n(or soft update: $\\theta^- \\leftarrow \\tau \\theta + (1-\\tau)\\theta^-$)\nDouble DQN (reduces overestimation bias) Use the online net to pick the action and the target net to evaluate it:\n$$y_i = r_i + \\gamma Q_{\\theta^-}\\left(s’i, \\operatorname*{argmax}{a’} Q_\\theta(s’_i,a’)\\right)$$\nCode Example for Deep Q-Learning For a complete implementation example, check out this GitHub gist with a working DQN on CartPole.\nWhat’s Next? In the next post, we’ll dive deeper into:\nPolicy Gradient methods (REINFORCE, Actor-Critic) Advanced DQN variants (Dueling DQN, Prioritized Experience Replay) Real-world applications in fraud detection and recommendation systems Stay tuned for more hands-on RL content! 🚀\nHave questions or thoughts about this post? Feel free to reach out - I’d love to discuss RL concepts and applications!\n",
+  "wordCount" : "1974",
+  "inLanguage": "en",
+  "image":"http://localhost:1313/img/project_images/Know_rep.png","datePublished": "2025-08-13T00:00:00Z",
+  "dateModified": "2025-08-13T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/reinforcement-learning-foundations/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Rajat Patel",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Rajat Patel (Alt + H)">Rajat Patel</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/research/" title="Research">
+                    <span>Research</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/vitae/" title="CV">
+                    <span>CV</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Blog</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Reinforcement Learning Foundations: From MDPs to Deep Q-Learning
+    </h1>
+    <div class="post-meta"><span title='2025-08-13 00:00:00 +0000 UTC'>August 13, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;1974 words
+
+</div>
+  </header> 
+<figure class="entry-cover">
+        <img loading="eager" src="http://localhost:1313/img/project_images/Know_rep.png" alt="Reinforcement Learning Foundations">
+        <figcaption>Understanding the building blocks of RL: from theory to implementation</figcaption>
+</figure><div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#why-this-series">Why This Series?</a></li>
+    <li><a href="#part-1-foundations-with-mdps-and-a-hmm-aside">Part 1: Foundations with MDPs (and a &ldquo;HMM aside&rdquo;)</a>
+      <ul>
+        <li><a href="#markov-decision-process-mdp">Markov Decision Process (MDP)</a></li>
+        <li><a href="#the-markov-property">The Markov Property</a></li>
+        <li><a href="#why-mdps-matter">Why MDPs Matter</a></li>
+        <li><a href="#how-do-markov-decision-processes-differ-from-hidden-markov-models">How do Markov Decision Processes differ from Hidden Markov Models</a></li>
+        <li><a href="#hmm-vs-mdps">HMM vs MDPs</a></li>
+      </ul>
+    </li>
+    <li><a href="#reward-functions">Reward Functions</a>
+      <ul>
+        <li><a href="#definition">Definition</a></li>
+        <li><a href="#intuition">Intuition</a></li>
+      </ul>
+    </li>
+    <li><a href="#state-value-function-vpis">State-Value Function $V^\pi(s)$</a></li>
+    <li><a href="#action-value-function-qpisa">Action Value Function $Q^\pi(s,a)$</a>
+      <ul>
+        <li><a href="#why-do-we-need-the-action-value-function-qsa">Why do we need the Action-Value function $Q(s,a)$?</a></li>
+        <li><a href="#intuition-intersection-analogy">Intuition (intersection analogy)</a></li>
+        <li><a href="#action-value-as-an-expectation-from-returns-to-bellman">Action-Value as an Expectation (from returns to Bellman)</a></li>
+        <li><a href="#simple-toy-example">Simple toy example</a></li>
+      </ul>
+    </li>
+    <li><a href="#q-learning">Q-Learning</a>
+      <ul>
+        <li><a href="#tabular-q-learning--from-optimality-to-an-update-you-can-code">Tabular Q-Learning — from optimality to an update you can code</a></li>
+      </ul>
+    </li>
+    <li><a href="#deep-q-learning">Deep Q-Learning</a>
+      <ul>
+        <li><a href="#core-ideas-why-dqn-works">Core ideas (why DQN works)</a></li>
+        <li><a href="#loss-and-targets">Loss and targets</a></li>
+        <li><a href="#double-dqn-reduces-overestimation-bias">Double DQN (reduces overestimation bias)</a></li>
+        <li><a href="#code-example-for-deep-q-learning">Code Example for Deep Q-Learning</a></li>
+      </ul>
+    </li>
+    <li><a href="#whats-next">What&rsquo;s Next?</a></li>
+  </ul>
+</nav>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<p>Reinforcement Learning (RL) has exploded in popularity — first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don&rsquo;t just help models learn context better; they also improve reasoning by teaching them to &ldquo;think in steps.&rdquo;</p>
+<p>My fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called &ldquo;tool of the decade.&rdquo; I wanted to go beyond using these models — I wanted to understand <em>how</em> they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.</p>
+<p>This post is the first in a series where we&rsquo;ll start with <strong>foundations</strong>:</p>
+<ul>
+<li>What is an MDP and how does it differ from an HMM?</li>
+<li>How do rewards and value functions actually work?</li>
+<li>How can we move from <em>knowing</em> state values to <em>learning</em> optimal actions with Q-learning?</li>
+<li>And how do we scale that to Deep Q-Learning when the state space explodes?</li>
+</ul>
+<p>By the end, you&rsquo;ll have a baseline RL toolkit — from mathematical definitions to runnable code — and a clear picture of how these pieces fit together when building agents.</p>
+<h2 id="why-this-series">Why This Series?<a hidden class="anchor" aria-hidden="true" href="#why-this-series">#</a></h2>
+<p>When I first encountered MDPs, I assumed they were simply an extension of Hidden Markov Models. I quickly learned this was wrong. HMMs deal with hidden states and observations, while MDPs deal with <strong>fully observable</strong> states and decision-making under uncertainty. Understanding this difference changed how I approached RL problems.</p>
+<p>This blog is written in a <strong>learning-by-doing</strong> style — meaning you&rsquo;ll see the concepts, math, and code side by side, along with real-world analogies (including fraud detection examples) and small &ldquo;try-it-yourself&rdquo; prompts.</p>
+<h2 id="part-1-foundations-with-mdps-and-a-hmm-aside">Part 1: Foundations with MDPs (and a &ldquo;HMM aside&rdquo;)<a hidden class="anchor" aria-hidden="true" href="#part-1-foundations-with-mdps-and-a-hmm-aside">#</a></h2>
+<h3 id="markov-decision-process-mdp">Markov Decision Process (MDP)<a hidden class="anchor" aria-hidden="true" href="#markov-decision-process-mdp">#</a></h3>
+<p><strong>Markov Decision Process (MDP)</strong> models an agent interacting with an environment over discrete time steps. It&rsquo;s defined by the 5-tuple $(S, A, P, R, \gamma)$ where:</p>
+<ul>
+<li>$S$ = states</li>
+<li>$A$ = actions</li>
+<li>$P(s&rsquo;|s,a)$ = transition probability of reaching $s&rsquo;$ after taking action $a$ in state $s$</li>
+<li>$R(s,a,s&rsquo;)$ = reward for this transition</li>
+<li>$\gamma \in [0,1)$ = discount factor for future rewards</li>
+</ul>
+<h3 id="the-markov-property">The Markov Property<a hidden class="anchor" aria-hidden="true" href="#the-markov-property">#</a></h3>
+<blockquote>
+<p>The future is conditionally independent of the past, given the present state.</p></blockquote>
+<p>Formally:
+$$P(s_{t+1} | s_t, a_t, s_{t-1}, \ldots) = P(s_{t+1} | s_t, a_t)$$</p>
+<h3 id="why-mdps-matter">Why MDPs Matter<a hidden class="anchor" aria-hidden="true" href="#why-mdps-matter">#</a></h3>
+<ul>
+<li>They formalize <strong>sequential decision making</strong>: robotics, games, recommendation systems.</li>
+<li>They give a clear mathematical foundation for defining and solving RL problems via <strong>value functions</strong>, <strong>policy search</strong>, and <strong>dynamic programming</strong>.</li>
+</ul>
+<h3 id="how-do-markov-decision-processes-differ-from-hidden-markov-models">How do Markov Decision Processes differ from Hidden Markov Models<a hidden class="anchor" aria-hidden="true" href="#how-do-markov-decision-processes-differ-from-hidden-markov-models">#</a></h3>
+<ul>
+<li>HMMs deal with partial observability (you only see observations, not the actual underlying states).</li>
+<li>The context window for HMMs is technically just 1 since they&rsquo;re first-order Markov models, meaning they depend only on the current hidden state.</li>
+</ul>
+<h3 id="hmm-vs-mdps">HMM vs MDPs<a hidden class="anchor" aria-hidden="true" href="#hmm-vs-mdps">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Aspect</th>
+          <th>HMM</th>
+          <th>MDP</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>State</strong></td>
+          <td>Hidden (unobserved)</td>
+          <td>Fully observed</td>
+      </tr>
+      <tr>
+          <td><strong>Observations</strong></td>
+          <td>Emitted from hidden states</td>
+          <td>Not applicable (agent directly observes state)</td>
+      </tr>
+      <tr>
+          <td><strong>Actions</strong></td>
+          <td>No actions; just a generative sequence model</td>
+          <td>Agent chooses actions $a$ in each state $s$</td>
+      </tr>
+      <tr>
+          <td><strong>Transition Model</strong></td>
+          <td>$P(h_{t+1}</td>
+          <td>h_t)$</td>
+      </tr>
+      <tr>
+          <td><strong>Emission/Reward</strong></td>
+          <td>Emission: $P(o_t</td>
+          <td>h_t)$</td>
+      </tr>
+      <tr>
+          <td><strong>Objective</strong></td>
+          <td>Compute likelihood or decode hidden path</td>
+          <td>Maximize expected cumulative reward</td>
+      </tr>
+      <tr>
+          <td><strong>Algorithms</strong></td>
+          <td>Forward/backward; Viterbi; Baum–Welch (EM)</td>
+          <td>Value iteration; policy iteration; Q-learning; policy gradients</td>
+      </tr>
+      <tr>
+          <td><strong>Use Cases</strong></td>
+          <td>Sequence labeling (speech, POS, bioinfo)</td>
+          <td>Sequential decision-making (robotics, games, control)</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="reward-functions">Reward Functions<a hidden class="anchor" aria-hidden="true" href="#reward-functions">#</a></h2>
+<h3 id="definition">Definition<a hidden class="anchor" aria-hidden="true" href="#definition">#</a></h3>
+<p>A <strong>reward function</strong> tells you how &ldquo;good&rdquo; a single transition is. Formally:</p>
+<p>$$R(s,a,s&rsquo;) = \text{expected immediate reward when you take action } a \text{ in state } s \text{ and end up in } s&rsquo;$$</p>
+<table>
+  <thead>
+      <tr>
+          <th>Symbol</th>
+          <th>Meaning</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$s$</td>
+          <td>Current state</td>
+      </tr>
+      <tr>
+          <td>$a$</td>
+          <td>Action taken</td>
+      </tr>
+      <tr>
+          <td>$s'$</td>
+          <td>Next state</td>
+      </tr>
+      <tr>
+          <td>$R(s,a,s&rsquo;)$</td>
+          <td>Reward you get for that $(s \to s&rsquo;)$ transition</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="intuition">Intuition<a hidden class="anchor" aria-hidden="true" href="#intuition">#</a></h3>
+<ul>
+<li>In a game, you might get +10 points for eating a pellet or –100 if you hit a ghost.</li>
+<li>In finance, you might receive +$5 if a trade succeeds or –$2 if it fails.</li>
+<li>In fraud detection, you might get +$10 if you correctly detect fraud, -$100 if you miss fraud, -$20 for a false positive, and +$5 if you correctly detect non-fraud.</li>
+</ul>
+<h2 id="state-value-function-vpis">State-Value Function $V^\pi(s)$<a hidden class="anchor" aria-hidden="true" href="#state-value-function-vpis">#</a></h2>
+<p>Under a given policy $\pi$, the value of a state $s$ is the expected, discounted sum of future rewards when you start in $s$ and follow $\pi$:</p>
+<p>$$V^\pi(s) = \mathbb{E}<em>\pi\left[\sum</em>{t=0}^{\infty}\gamma^t r_{t+1} \mid S_0=s\right]$$</p>
+<ul>
+<li>$\gamma$ trades off immediate vs. long-term reward.</li>
+<li>High $V^\pi(s)$ means &ldquo;good to be here under $\pi$&rdquo;</li>
+<li>$r_{t+1} = R(S_t, A_t, S_{t+1})$</li>
+<li>$\mathbb{E}$ = average over all possible futures under $\pi$</li>
+</ul>
+<h2 id="action-value-function-qpisa">Action Value Function $Q^\pi(s,a)$<a hidden class="anchor" aria-hidden="true" href="#action-value-function-qpisa">#</a></h2>
+<p>$Q^\pi(s, a)$ is the expected (average) discounted return if you take action $a$ in state $s$ now and then follow the policy $\pi$ afterwards.</p>
+<h3 id="why-do-we-need-the-action-value-function-qsa">Why do we need the Action-Value function $Q(s,a)$?<a hidden class="anchor" aria-hidden="true" href="#why-do-we-need-the-action-value-function-qsa">#</a></h3>
+<p><strong>Short answer:</strong></p>
+<p>Because if you only know how good a <strong>state</strong> is (that&rsquo;s $V(s)$), you still don&rsquo;t know which <strong>action</strong> to take <em>from that state</em> without either (a) a model of the world to look ahead, or (b) evaluating every action by trial. $Q(s,a)$ tells you the expected return <strong>if you take action $a$ now</strong> in state $s$, then behave well after. That lets you pick the best action <em>locally</em> without a model.</p>
+<h3 id="intuition-intersection-analogy">Intuition (intersection analogy)<a hidden class="anchor" aria-hidden="true" href="#intuition-intersection-analogy">#</a></h3>
+<p>You&rsquo;re at a road intersection (state $s$). Knowing &ldquo;this intersection is promising&rdquo; (high $V(s)$) doesn&rsquo;t tell you whether to <strong>turn left</strong> or <strong>right</strong>. The thing you actually need at the decision point is: &ldquo;If I <strong>turn left</strong> right now, how good is that?&rdquo; That number is $Q(s,\text{left})$. Likewise for right.</p>
+<p>$$Q^\pi(s,a) = \mathbb{E}<em>\pi\left[\sum</em>{k=0}^{\infty}\gamma^k r_{t+1+k} \mid S_t=s, A_t=a\right]$$</p>
+<h3 id="action-value-as-an-expectation-from-returns-to-bellman">Action-Value as an Expectation (from returns to Bellman)<a hidden class="anchor" aria-hidden="true" href="#action-value-as-an-expectation-from-returns-to-bellman">#</a></h3>
+<p><strong>TL;DR:</strong></p>
+<p>We turn the scary infinite return into a <strong>local recursion</strong>: &ldquo;<strong>reward now + discounted value later</strong>,&rdquo; averaged over what can happen next. This uses two facts:</p>
+<ul>
+<li>the <strong>law of total expectation</strong></li>
+<li>the <strong>Markov property</strong></li>
+</ul>
+<p><strong>Step 1: Start from the definition (returns view)</strong></p>
+<p>$$Q^\pi(s,a) = \mathbb{E}<em>\pi\left[\sum</em>{k=0}^{\infty}\gamma^k r_{t+1+k} \mid S_t=s, A_t=a\right]$$</p>
+<p><strong>Step 2: Peel off one step</strong></p>
+<p>Separate the immediate reward from everything after:</p>
+<p>$$Q^\pi(s,a) = \mathbb{E}\left[r_{t+1} + \gamma G_{t+1} \mid S_t=s, A_t=a\right]$$</p>
+<p>where $G_{t+1} = \sum_{k=0}^{\infty}\gamma^k r_{t+2+k}$ is &ldquo;the return starting next step.&rdquo;</p>
+<p><strong>Step 3: Condition on the next state $s&rsquo;$ (law of total expectation)</strong></p>
+<p>$$Q^\pi(s,a) = \mathbb{E}<em>{s&rsquo; \sim P(\cdot|s,a)}\left[\mathbb{E}\left[r</em>{t+1} + \gamma G_{t+1} \mid S_t=s,A_t=a,S_{t+1}=s&rsquo;\right]\right]$$</p>
+<p><strong>Step 4: Use the Markov property (make it local)</strong></p>
+<p>Given $(s,a,s&rsquo;)$:</p>
+<ul>
+<li>Immediate reward depends only on that transition: $\mathbb{E}[r_{t+1}|s,a,s&rsquo;] = R(s,a,s&rsquo;)$</li>
+<li>The future return depends only on the <strong>next state</strong> (and then following $\pi$): $\mathbb{E}[G_{t+1}|S_{t+1}=s&rsquo;] = V^\pi(s&rsquo;)$</li>
+</ul>
+<p>So the inner expectation becomes $R(s,a,s&rsquo;) + \gamma V^\pi(s&rsquo;)$, yielding:</p>
+<p>$$Q^\pi(s,a) = \mathbb{E}_{s&rsquo; \sim P(\cdot|s,a)}\big[R(s,a,s&rsquo;) + \gamma V^\pi(s&rsquo;)\big]$$</p>
+<p><strong>Step 5: Expand $V^\pi$ over next actions</strong></p>
+<p>By definition of the state value: $V^\pi(s&rsquo;) = \sum_{a&rsquo;} \pi(a&rsquo;|s&rsquo;) Q^\pi(s&rsquo;,a&rsquo;)$</p>
+<p>Putting it all together gives the <strong>Bellman expectation equation for $Q^\pi$</strong>:</p>
+<p>$$\boxed{Q^\pi(s,a) = \sum_{s&rsquo;} P(s&rsquo;|s,a)\Big[R(s,a,s&rsquo;) + \gamma \sum_{a&rsquo;} \pi(a&rsquo;|s&rsquo;) Q^\pi(s&rsquo;,a&rsquo;)\Big]}$$</p>
+<h3 id="simple-toy-example">Simple toy example<a hidden class="anchor" aria-hidden="true" href="#simple-toy-example">#</a></h3>
+<p>From state $s$, action $a$ leads to:</p>
+<ul>
+<li>$s_1$ with prob 0.7, reward 5</li>
+<li>$s_2$ with prob 0.3, reward 0</li>
+</ul>
+<p>Let $\gamma=0.9$, and suppose $V^\pi(s_1)=10$ and $V^\pi(s_2)=2$. Then:</p>
+<p>$$\begin{align}
+Q^\pi(s,a) &amp;= 0.7(5 + 0.9 \times 10) + 0.3(0 + 0.9 \times 2) \
+&amp;= 0.7(14) + 0.3(1.8) \
+&amp;= 9.8 + 0.54 \
+&amp;= \mathbf{10.34}
+\end{align}$$</p>
+<p>It&rsquo;s a <strong>weighted average</strong> of &ldquo;reward now + discounted value later&rdquo; over possible next states.</p>
+<h2 id="q-learning">Q-Learning<a hidden class="anchor" aria-hidden="true" href="#q-learning">#</a></h2>
+<p>Knowing <strong>state value</strong> is great—if you also have a <strong>model</strong> of the world to look ahead. But when you don&rsquo;t, you want to know directly: <em>How good is taking action a in state s right now?</em> That&rsquo;s the <strong>action-value</strong> ($Q(s,a)$), and <strong>Q-learning</strong> learns it <strong>from experience</strong> with no model required.</p>
+<h3 id="tabular-q-learning--from-optimality-to-an-update-you-can-code">Tabular Q-Learning — from optimality to an update you can code<a hidden class="anchor" aria-hidden="true" href="#tabular-q-learning--from-optimality-to-an-update-you-can-code">#</a></h3>
+<h4 id="1-objective-optimal-action-values">1) Objective: optimal action-values<a hidden class="anchor" aria-hidden="true" href="#1-objective-optimal-action-values">#</a></h4>
+<p>$$Q^<em>(s,a) = \sum_{s&rsquo;} P(s&rsquo;|s,a)\Big[R(s,a,s&rsquo;) + \gamma \max_{a&rsquo;} Q^</em>(s&rsquo;,a&rsquo;)\Big]$$</p>
+<p>This is the <strong>Bellman optimality equation</strong>. If we had $Q^<em>$, the greedy policy $\pi^</em>(s) = \operatorname*{argmax}_a Q^*(s,a)$ is optimal.</p>
+<h4 id="2-one-step-td-target-what-we-aim-at-each-step">2) One-step TD target (what we aim at each step)<a hidden class="anchor" aria-hidden="true" href="#2-one-step-td-target-what-we-aim-at-each-step">#</a></h4>
+<p>Replace the expectation over $s&rsquo;$ with a <strong>sample</strong> from the environment:</p>
+<p>$$y_{\text{target}} = r + \gamma \max_{a&rsquo;} Q(s&rsquo;,a&rsquo;)$$</p>
+<p>This is a sampled estimate of the right-hand side of Bellman optimality.</p>
+<h4 id="3-q-learning-update-move-toward-the-target">3) Q-learning update (move toward the target)<a hidden class="anchor" aria-hidden="true" href="#3-q-learning-update-move-toward-the-target">#</a></h4>
+<p>$$Q(s,a) \leftarrow Q(s,a) + \alpha \Big[r + \gamma \max_{a&rsquo;} Q(s&rsquo;,a&rsquo;) - Q(s,a)\Big]$$</p>
+<ul>
+<li>$\alpha$ is the learning rate</li>
+<li>We <strong>bootstrap</strong> using our own $Q$ on $s'$</li>
+<li>Using $\max_{a&rsquo;}$ (rather than the next action actually taken) makes Q-learning <strong>off-policy</strong>: it learns about the greedy policy even if behavior is exploratory</li>
+</ul>
+<h4 id="4-exploration-ε-greedy-behavior-policy">4) Exploration: ε-greedy behavior policy<a hidden class="anchor" aria-hidden="true" href="#4-exploration-ε-greedy-behavior-policy">#</a></h4>
+<p>We still need to <strong>visit</strong> state-actions to learn them:</p>
+<ul>
+<li>With probability ε: take a random action (explore)</li>
+<li>Otherwise: take $\operatorname*{argmax}_a Q(s,a)$ (exploit)</li>
+</ul>
+<p>Typical schedule: start ε at 1.0, decay to 0.1 (or 0.01) over many episodes.</p>
+<h4 id="5-tiny-numeric-example-feel-the-td-step">5) Tiny numeric example (feel the TD step)<a hidden class="anchor" aria-hidden="true" href="#5-tiny-numeric-example-feel-the-td-step">#</a></h4>
+<p>Suppose at $(s,a)$ you observe:</p>
+<ul>
+<li>reward $r=1.0$, next state $s'$</li>
+<li>current $Q(s,a)=0.50$</li>
+<li>$\max_{a&rsquo;} Q(s&rsquo;,a&rsquo;) = 0.80$</li>
+<li>$\gamma=0.9$, $\alpha=0.5$</li>
+</ul>
+<p>Target: $y = r + \gamma \max_{a&rsquo;} Q(s&rsquo;,a&rsquo;) = 1.0 + 0.9 \times 0.80 = 1.72$</p>
+<p>Update: $Q_{\text{new}}(s,a) = 0.50 + 0.5 \times (1.72 - 0.50) = \mathbf{1.11}$</p>
+<p>You&rsquo;ve moved <strong>halfway</strong> toward the target.</p>
+<h4 id="6-sarsa-vs-expected-sarsa-vs-q-learning-quick-contrast">6) SARSA vs Expected SARSA vs Q-learning (quick contrast)<a hidden class="anchor" aria-hidden="true" href="#6-sarsa-vs-expected-sarsa-vs-q-learning-quick-contrast">#</a></h4>
+<ul>
+<li><strong>SARSA (on-policy)</strong> uses the <strong>actual next action</strong> $a&rsquo; \sim \pi$:
+$$Q \leftarrow Q + \alpha[r + \gamma Q(s&rsquo;,a&rsquo;) - Q]$$</li>
+<li><strong>Expected SARSA</strong> computes the <strong>average</strong> over next actions:
+$$Q \leftarrow Q + \alpha[r + \gamma \sum_{a&rsquo;} \pi(a&rsquo;|s&rsquo;)Q(s&rsquo;,a&rsquo;) - Q]$$</li>
+<li><strong>Q-learning (off-policy)</strong> uses the <strong>max</strong> over actions:
+$$Q \leftarrow Q + \alpha[r + \gamma \max_{a&rsquo;} Q(s&rsquo;,a&rsquo;) - Q]$$</li>
+</ul>
+<h4 id="7-minimal-numpy-implementation-frozenlake-tabular">7) Minimal NumPy implementation (FrozenLake, tabular)<a hidden class="anchor" aria-hidden="true" href="#7-minimal-numpy-implementation-frozenlake-tabular">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np<span style="color:#f92672">,</span> gym
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>env <span style="color:#f92672">=</span> gym<span style="color:#f92672">.</span>make(<span style="color:#e6db74">&#39;FrozenLake-v1&#39;</span>, is_slippery<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>nS, nA <span style="color:#f92672">=</span> env<span style="color:#f92672">.</span>observation_space<span style="color:#f92672">.</span>n, env<span style="color:#f92672">.</span>action_space<span style="color:#f92672">.</span>n
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Q <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>zeros((nS, nA))
+</span></span><span style="display:flex;"><span>alpha, gamma <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.8</span>, <span style="color:#ae81ff">0.9</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>eps, eps_min, eps_decay <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">0.1</span>, <span style="color:#ae81ff">0.995</span>
+</span></span><span style="display:flex;"><span>episodes <span style="color:#f92672">=</span> <span style="color:#ae81ff">2000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">eps_greedy</span>(s):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>rand() <span style="color:#f92672">&lt;</span> eps:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> env<span style="color:#f92672">.</span>action_space<span style="color:#f92672">.</span>sample()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> np<span style="color:#f92672">.</span>argmax(Q[s])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> ep <span style="color:#f92672">in</span> range(episodes):
+</span></span><span style="display:flex;"><span>    s, done <span style="color:#f92672">=</span> env<span style="color:#f92672">.</span>reset(), <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">not</span> done:
+</span></span><span style="display:flex;"><span>        a <span style="color:#f92672">=</span> eps_greedy(s)
+</span></span><span style="display:flex;"><span>        s2, r, done, _ <span style="color:#f92672">=</span> env<span style="color:#f92672">.</span>step(a)
+</span></span><span style="display:flex;"><span>        target <span style="color:#f92672">=</span> r <span style="color:#f92672">+</span> (<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">if</span> done <span style="color:#66d9ef">else</span> gamma <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>max(Q[s2]))
+</span></span><span style="display:flex;"><span>        Q[s, a] <span style="color:#f92672">+=</span> alpha <span style="color:#f92672">*</span> (target <span style="color:#f92672">-</span> Q[s, a])
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">=</span> s2
+</span></span><span style="display:flex;"><span>    eps <span style="color:#f92672">=</span> max(eps_min, eps <span style="color:#f92672">*</span> eps_decay)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Q-table:</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, Q)
+</span></span></code></pre></div><blockquote>
+<p><strong>Terminal states</strong>: if done, set the bootstrapped term to 0 (as above).</p></blockquote>
+<h2 id="deep-q-learning">Deep Q-Learning<a hidden class="anchor" aria-hidden="true" href="#deep-q-learning">#</a></h2>
+<p>Q-learning works only to an extent where it is possible to keep track of states and actions at a given time. However, as we move away from simple games like tic-tac-toe to something as complex as Chess, the number of states and actions at a given time increases exponentially. At that stage, keeping track of a Q-table becomes very compute intensive, doesn&rsquo;t scale well, and is very slow. Hence, the paradigm of Deep Q-learning provides the potential to overcome this barrier.</p>
+<p>Tabular methods break when the state space is huge. DQN replaces the table with a neural net $Q_\theta(s,a)$ that outputs all action values from a state.</p>
+<h3 id="core-ideas-why-dqn-works">Core ideas (why DQN works)<a hidden class="anchor" aria-hidden="true" href="#core-ideas-why-dqn-works">#</a></h3>
+<ol>
+<li><strong>Function approximation</strong>: $Q_\theta(s,a)$ via a neural net</li>
+<li><strong>Experience replay</strong>: Store $(s,a,r,s&rsquo;,\text{done})$ transitions, train on random mini‑batches to break correlation</li>
+</ol>
+<h3 id="loss-and-targets">Loss and targets<a hidden class="anchor" aria-hidden="true" href="#loss-and-targets">#</a></h3>
+<p>For a batch $\mathcal{B}$ of transitions:</p>
+<p>$$y_i = \left{
+\begin{array}{ll}
+r_i &amp; \text{if } \text{done}<em>i \
+r_i + \gamma \max</em>{a&rsquo;} Q_{\theta^-}(s&rsquo;_i, a&rsquo;) &amp; \text{otherwise}
+\end{array}
+\right.$$</p>
+<p>Squared loss (often Huber in practice):</p>
+<p>$$\mathcal{L}(\theta) = \frac{1}{|\mathcal{B}|}\sum_{i \in \mathcal{B}} \big( y_i - Q_\theta(s_i, a_i) \big)^2$$</p>
+<p>Gradient step: $\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}(\theta)$</p>
+<p><strong>Target network update</strong> (periodic hard update every $C$ steps): $\theta^- \leftarrow \theta$</p>
+<p>(or soft update: $\theta^- \leftarrow \tau \theta + (1-\tau)\theta^-$)</p>
+<h3 id="double-dqn-reduces-overestimation-bias">Double DQN (reduces overestimation bias)<a hidden class="anchor" aria-hidden="true" href="#double-dqn-reduces-overestimation-bias">#</a></h3>
+<p>Use the <strong>online</strong> net to pick the action and the <strong>target</strong> net to evaluate it:</p>
+<p>$$y_i = r_i + \gamma Q_{\theta^-}\left(s&rsquo;<em>i, \operatorname*{argmax}</em>{a&rsquo;} Q_\theta(s&rsquo;_i,a&rsquo;)\right)$$</p>
+<h3 id="code-example-for-deep-q-learning">Code Example for Deep Q-Learning<a hidden class="anchor" aria-hidden="true" href="#code-example-for-deep-q-learning">#</a></h3>
+<p>For a complete implementation example, check out this <a href="https://gist.github.com/rajathpatel23">GitHub gist</a> with a working DQN on CartPole.</p>
+<hr>
+<h2 id="whats-next">What&rsquo;s Next?<a hidden class="anchor" aria-hidden="true" href="#whats-next">#</a></h2>
+<p>In the next post, we&rsquo;ll dive deeper into:</p>
+<ul>
+<li>Policy Gradient methods (REINFORCE, Actor-Critic)</li>
+<li>Advanced DQN variants (Dueling DQN, Prioritized Experience Replay)</li>
+<li>Real-world applications in fraud detection and recommendation systems</li>
+</ul>
+<p>Stay tuned for more hands-on RL content! 🚀</p>
+<hr>
+<p><em>Have questions or thoughts about this post? Feel free to <a href="mailto:rpatel12@umbc.edu">reach out</a> - I&rsquo;d love to discuss RL concepts and applications!</em></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/machine-learning/">Machine-Learning</a></li>
+      <li><a href="http://localhost:1313/tags/reinforcement-learning/">Reinforcement-Learning</a></li>
+      <li><a href="http://localhost:1313/tags/deep-learning/">Deep-Learning</a></li>
+      <li><a href="http://localhost:1313/tags/mdp/">Mdp</a></li>
+      <li><a href="http://localhost:1313/tags/q-learning/">Q-Learning</a></li>
+    </ul>
+
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Reinforcement Learning Foundations: From MDPs to Deep Q-Learning on x"
+            href="https://x.com/intent/tweet/?text=Reinforcement%20Learning%20Foundations%3a%20From%20MDPs%20to%20Deep%20Q-Learning&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2freinforcement-learning-foundations%2f&amp;hashtags=machine-learning%2creinforcement-learning%2cdeep-learning%2cmdp%2cq-learning">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Reinforcement Learning Foundations: From MDPs to Deep Q-Learning on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2freinforcement-learning-foundations%2f&amp;title=Reinforcement%20Learning%20Foundations%3a%20From%20MDPs%20to%20Deep%20Q-Learning&amp;summary=Reinforcement%20Learning%20Foundations%3a%20From%20MDPs%20to%20Deep%20Q-Learning&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2freinforcement-learning-foundations%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Reinforcement Learning Foundations: From MDPs to Deep Q-Learning on reddit"
+            href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2freinforcement-learning-foundations%2f&title=Reinforcement%20Learning%20Foundations%3a%20From%20MDPs%20to%20Deep%20Q-Learning">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Reinforcement Learning Foundations: From MDPs to Deep Q-Learning on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2freinforcement-learning-foundations%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Reinforcement Learning Foundations: From MDPs to Deep Q-Learning on whatsapp"
+            href="https://api.whatsapp.com/send?text=Reinforcement%20Learning%20Foundations%3a%20From%20MDPs%20to%20Deep%20Q-Learning%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2freinforcement-learning-foundations%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Reinforcement Learning Foundations: From MDPs to Deep Q-Learning on telegram"
+            href="https://telegram.me/share/url?text=Reinforcement%20Learning%20Foundations%3a%20From%20MDPs%20to%20Deep%20Q-Learning&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2freinforcement-learning-foundations%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Reinforcement Learning Foundations: From MDPs to Deep Q-Learning on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=Reinforcement%20Learning%20Foundations%3a%20From%20MDPs%20to%20Deep%20Q-Learning&u=http%3a%2f%2flocalhost%3a1313%2fposts%2freinforcement-learning-foundations%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">Rajat Patel</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
