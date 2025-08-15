@@ -6,7 +6,7 @@ showToc: true
 TocOpen: true
 ---
 
-## 🚀 Research & Development Projects
+## 🚀 Projects
 
 <style>
 .project-card {
@@ -120,9 +120,9 @@ TocOpen: true
 </style>
 
 <div class="project-card">
-  <img src="/img/project_images/Know_rep.png" alt="Knowledge Graph Embedding" class="project-image">
+  <img src="/img/project_images/introduction_slide.png" alt="Knowledge Graph Embedding" class="project-image">
   <div class="project-content">
-    <h3 class="project-title">Joint KGE-FNET-LM</h3>
+    <h3 class="project-title">Joint Knowledge Graph Embedding, Fine Grain Entity Type and Language Modeling</h3>
     <p class="project-description">
       We demonstrate the complementary natures of neural knowledge graph embedding, finegrain entity type prediction, and neural language modeling. We show that a language model-inspired knowledge graph embedding approach yields both improved knowledge graph embeddings and fine-grain entity type representations. Our work also shows that jointly modeling both structured knowledge tuples and language improves both.
     </p>
@@ -143,7 +143,7 @@ TocOpen: true
 </div>
 
 <div class="project-card">
-  <img src="/img/project_images/Unsupervise_music_Classification.png" alt="Image Recognition with Knowledge Graph" class="project-image">
+  <img src="/img/project_images/Know_rep.png" alt="Image Recognition with Knowledge Graph" class="project-image">
   <div class="project-content">
     <h3 class="project-title">Combining Image Recognition with Knowledge Graph Embedding for Learning Semantic Attribute of Images</h3>
     <p class="project-description">
@@ -161,5 +161,29 @@ TocOpen: true
       Python implementation of Hidden Markov Models (HMM). The implementation provides source code for forward-backward algorithm and viterbi algorithm for part of speech tagging problem using HMM. This project demonstrates the practical application of probabilistic models in natural language processing tasks.
     </p>
     <a href="https://github.com/rajathpatel23/hmm-implementation" class="project-link">⚡ View on GitHub</a>
+  </div>
+</div> 
+
+<div class="project-card">
+  <img src="/img/project_images/mixed_norms_new.png" alt="FISTA, ADMM implementation" class="project-image">
+  <div class="project-content">
+    <h3 class="project-title">FISTA, ADMM implementation</h3>
+    <p class="project-description">
+      The project provides python
+      implementation of optimization algorithms like FISTA, ADMM and mixed norms.
+    </p>
+    <a href="hhttps://github.com/shimingyoung/mtl" class="project-link">⚡ View on GitHub</a>
+  </div>
+</div> 
+
+<div class="project-card">
+  <!-- <img src="img/project_images/Kafka_twitter_new.png" alt="Streaming Tweets with Kafka<" class="project-image"> -->
+  <div class="project-content">
+    <h3 class="project-title">Streaming Tweets with Kafka</h3>
+    <p class="project-description">
+      This project gives understanding of the streaming capability with Kafka for extracting tweets from twitter.
+      The Kafka streaming service can be used to build pipelines to analyzing the tweets in real time with a ML models.
+    </p>
+    <a href="https://github.com/rajathpatel23/kafka-stream-tweets" class="project-link">⚡ View on GitHub</a>
   </div>
 </div> 

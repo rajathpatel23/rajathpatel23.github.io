@@ -15,9 +15,9 @@ TocOpen: false
   <div style="flex: 1; min-width: 300px;">
     <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 1.2em; font-weight: 700;">Machine Learning Engineer</h3>
     <p style="margin: 0 0 5px 0; font-weight: 600; color: #374151;">Chime Financial Inc.</p>
-    <p style="margin: 0 0 15px 0; color: #6b7280; font-style: italic;">San Francisco, CA</p>
+    <p style="margin: 0 0 15px 0; color: #6b7280; font-style: italic;">San Bruno, CA</p>
     <p style="margin: 0; line-height: 1.6; color: #374151;">
-      I work on Trust and Safety ML platforms, building scalable machine learning systems at the intersection of finance and technology.
+      I work on Trust and Safety, building scalable machine learning systems at the intersection of finance and technology.
     </p>
   </div>
 </div>

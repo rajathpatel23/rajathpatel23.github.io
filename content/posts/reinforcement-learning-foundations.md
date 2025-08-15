@@ -7,10 +7,10 @@ categories: ["Technical", "Tutorial"]
 showToc: true
 TocOpen: true
 math: true
-cover:
-    image: "/img/project_images/Know_rep.png"
-    alt: "Reinforcement Learning Foundations"
-    caption: "Understanding the building blocks of RL: from theory to implementation"
+# cover:
+#     image: "/img/project_images/Know_rep.png"
+#     alt: "Reinforcement Learning Foundations"
+#     caption: "Understanding the building blocks of RL: from theory to implementation"
 ---
 
 ## Introduction
@@ -51,7 +51,7 @@ This blog is written in a **learning-by-doing** style — meaning you'll see the
 > The future is conditionally independent of the past, given the present state.
 
 Formally: 
-$$P(s_{t+1} | s_t, a_t, s_{t-1}, \ldots) = P(s_{t+1} | s_t, a_t)$$
+$$P(s_{t+1} \mid s_t, a_t, s_{t-1}, \ldots) = P(s_{t+1} \mid s_t, a_t)$$
 
 ### Why MDPs Matter
 - They formalize **sequential decision making**: robotics, games, recommendation systems.
@@ -69,8 +69,8 @@ $$P(s_{t+1} | s_t, a_t, s_{t-1}, \ldots) = P(s_{t+1} | s_t, a_t)$$
 | **State** | Hidden (unobserved) | Fully observed |
 | **Observations** | Emitted from hidden states | Not applicable (agent directly observes state) |
 | **Actions** | No actions; just a generative sequence model | Agent chooses actions $a$ in each state $s$ |
-| **Transition Model** | $P(h_{t+1}|h_t)$ | $P(s_{t+1}|s_t,a_t)$ |
-| **Emission/Reward** | Emission: $P(o_t|h_t)$ | Reward: $R(s_t,a_t,s_{t+1})$ |
+| **Transition Model** | $P(h_{t+1} \mid h_t)$ | $P(s_{t+1} \mid s_t,a_t)$ |
+| **Emission/Reward** | Emission: $P(o_t \mid h_t)$ | Reward: $R(s_t,a_t,s_{t+1})$ |
 | **Objective** | Compute likelihood or decode hidden path | Maximize expected cumulative reward |
 | **Algorithms** | Forward/backward; Viterbi; Baum–Welch (EM) | Value iteration; policy iteration; Q-learning; policy gradients |
 | **Use Cases** | Sequence labeling (speech, POS, bioinfo) | Sequential decision-making (robotics, games, control) |
@@ -93,18 +93,18 @@ $$R(s,a,s') = \text{expected immediate reward when you take action } a \text{ in
 ### Intuition
 
 - In a game, you might get +10 points for eating a pellet or –100 if you hit a ghost.
-- In finance, you might receive +$5 if a trade succeeds or –$2 if it fails.
-- In fraud detection, you might get +$10 if you correctly detect fraud, -$100 if you miss fraud, -$20 for a false positive, and +$5 if you correctly detect non-fraud.
+- In finance, you might receive +\$5 if a trade succeeds or –\$2 if it fails.
+- In fraud detection, you might get +\$10 if you correctly detect fraud, -\$100 if you miss fraud, -\$20 for a false positive, and +\$5 if you correctly detect non-fraud.
 
 ## State-Value Function $V^\pi(s)$
 
 Under a given policy $\pi$, the value of a state $s$ is the expected, discounted sum of future rewards when you start in $s$ and follow $\pi$:
 
-$$V^\pi(s) = \mathbb{E}_\pi\left[\sum_{t=0}^{\infty}\gamma^t r_{t+1} \mid S_0=s\right]$$
+$$V^\pi(s) = \mathbb{E}_\pi\left[\sum\_{t=0}^{\infty}\gamma^t r\_{t+1} \mid S_0=s\right]$$
 
 - $\gamma$ trades off immediate vs. long-term reward.
 - High $V^\pi(s)$ means "good to be here under $\pi$"
-- $r_{t+1} = R(S_t, A_t, S_{t+1})$
+- $r\_{t+1} = R(S_t, A_t, S\_{t+1})$
 - $\mathbb{E}$ = average over all possible futures under $\pi$
 
 ## Action Value Function $Q^\pi(s,a)$
@@ -121,7 +121,7 @@ Because if you only know how good a **state** is (that's $V(s)$), you still don'
 
 You're at a road intersection (state $s$). Knowing "this intersection is promising" (high $V(s)$) doesn't tell you whether to **turn left** or **right**. The thing you actually need at the decision point is: "If I **turn left** right now, how good is that?" That number is $Q(s,\text{left})$. Likewise for right.
 
-$$Q^\pi(s,a) = \mathbb{E}_\pi\left[\sum_{k=0}^{\infty}\gamma^k r_{t+1+k} \mid S_t=s, A_t=a\right]$$
+$$Q^\pi(s,a) = \mathbb{E}_\pi\left[\sum\_{k=0}^{\infty}\gamma^k r\_{t+1+k} \mid S_t=s, A_t=a\right]$$
 
 ### Action-Value as an Expectation (from returns to Bellman)
 
@@ -134,30 +134,30 @@ We turn the scary infinite return into a **local recursion**: "**reward now + di
 
 **Step 1: Start from the definition (returns view)**
    
-$$Q^\pi(s,a) = \mathbb{E}_\pi\left[\sum_{k=0}^{\infty}\gamma^k r_{t+1+k} \mid S_t=s, A_t=a\right]$$
+$$Q^\pi(s,a) = \mathbb{E}_\pi\left[\sum\_{k=0}^{\infty}\gamma^k r\_{t+1+k} \mid S_t=s, A_t=a\right]$$
 
 **Step 2: Peel off one step**
    
 Separate the immediate reward from everything after:
    
-$$Q^\pi(s,a) = \mathbb{E}\left[r_{t+1} + \gamma G_{t+1} \mid S_t=s, A_t=a\right]$$
+$$Q^\pi(s,a) = \mathbb{E}\left[r\_{t+1} + \gamma G\_{t+1} \mid S_t=s, A_t=a\right]$$
    
-where $G_{t+1} = \sum_{k=0}^{\infty}\gamma^k r_{t+2+k}$ is "the return starting next step."
+where $G\_{t+1} = \sum\_{k=0}^{\infty}\gamma^k r\_{t+2+k}$ is "the return starting next step."
 
 **Step 3: Condition on the next state $s'$ (law of total expectation)**
    
-$$Q^\pi(s,a) = \mathbb{E}_{s' \sim P(\cdot|s,a)}\left[\mathbb{E}\left[r_{t+1} + \gamma G_{t+1} \mid S_t=s,A_t=a,S_{t+1}=s'\right]\right]$$
+$$Q^\pi(s,a) = \mathbb{E}\_{s' \sim P(\cdot|s,a)}\left[\mathbb{E}\left[r\_{t+1} + \gamma G\_{t+1} \mid S_t=s,A_t=a,S\_{t+1}=s'\right]\right]$$
 
 **Step 4: Use the Markov property (make it local)**
    
 Given $(s,a,s')$:
    
-- Immediate reward depends only on that transition: $\mathbb{E}[r_{t+1}|s,a,s'] = R(s,a,s')$
-- The future return depends only on the **next state** (and then following $\pi$): $\mathbb{E}[G_{t+1}|S_{t+1}=s'] = V^\pi(s')$
+- Immediate reward depends only on that transition: $\mathbb{E}[r\_{t+1}|s,a,s'] = R(s,a,s')$
+- The future return depends only on the **next state** (and then following $\pi$): $\mathbb{E}[G\_{t+1}|S\_{t+1}=s'] = V^\pi(s')$
    
 So the inner expectation becomes $R(s,a,s') + \gamma V^\pi(s')$, yielding:
    
-$$Q^\pi(s,a) = \mathbb{E}_{s' \sim P(\cdot|s,a)}\big[R(s,a,s') + \gamma V^\pi(s')\big]$$
+$$Q^\pi(s,a) = \mathbb{E}\_{s' \sim P(\cdot|s,a)}\big[R(s,a,s') + \gamma V^\pi(s')\big]$$
 
 **Step 5: Expand $V^\pi$ over next actions**
    
@@ -194,7 +194,7 @@ Knowing **state value** is great—if you also have a **model** of the world to 
 
 $$Q^*(s,a) = \sum_{s'} P(s'|s,a)\Big[R(s,a,s') + \gamma \max_{a'} Q^*(s',a')\Big]$$
 
-This is the **Bellman optimality equation**. If we had $Q^*$, the greedy policy $\pi^*(s) = \operatorname*{argmax}_a Q^*(s,a)$ is optimal.
+This is the **Bellman optimality equation**. If we had $Q^*$, the greedy policy $\pi^*(s) = \arg\max_a Q^*(s,a)$ is optimal.
 
 #### 2) One-step TD target (what we aim at each step)
 
@@ -216,7 +216,7 @@ $$Q(s,a) \leftarrow Q(s,a) + \alpha \Big[r + \gamma \max_{a'} Q(s',a') - Q(s,a)\
 
 We still need to **visit** state-actions to learn them:
 - With probability ε: take a random action (explore)
-- Otherwise: take $\operatorname*{argmax}_a Q(s,a)$ (exploit)
+- Otherwise: take $\arg\max_a Q(s,a)$ (exploit)
 
 Typical schedule: start ε at 1.0, decay to 0.1 (or 0.01) over many episodes.
 
@@ -292,12 +292,9 @@ Tabular methods break when the state space is huge. DQN replaces the table with 
 
 For a batch $\mathcal{B}$ of transitions:
 
-$$y_i = \left\{
-\begin{array}{ll}
-r_i & \text{if } \text{done}_i \\
-r_i + \gamma \max_{a'} Q_{\theta^-}(s'_i, a') & \text{otherwise}
-\end{array}
-\right.$$
+$$y_i = r_i \quad \text{if episode is done}$$
+
+$$y_i = r_i + \gamma \max_{a'} Q_{\theta^-}(s'_i, a') \quad \text{otherwise}$$
 
 Squared loss (often Huber in practice):
 
@@ -313,7 +310,9 @@ Gradient step: $\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}(\theta
 
 Use the **online** net to pick the action and the **target** net to evaluate it:
 
-$$y_i = r_i + \gamma Q_{\theta^-}\left(s'_i, \operatorname*{argmax}_{a'} Q_\theta(s'_i,a')\right)$$
+$$y_i = r_i + \gamma Q_{\theta^-}(s'_i, a^*)$$
+
+where $a^* = \text{argmax}\_{a'} Q_\theta(s'_i,a')$
 
 ### Code Example for Deep Q-Learning
 
