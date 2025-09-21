@@ -6,12 +6,12 @@
     <description>Recent content in Nlp on Rajat Patel</description>
     <generator>Hugo -- 0.148.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/nlp/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Understanding Tokenization: From Text to Integers</title>
       <link>http://localhost:1313/posts/tokenizers/</link>
-      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/tokenizers/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Language models are mathematical functions; they operate on numbers, not raw text. Tokenization is the crucial first step in converting human-readable text into a sequence of integers (tokens) that a model can process. These tokens are then mapped to embedding vectors.&lt;/p&gt;
