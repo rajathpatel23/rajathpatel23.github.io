@@ -6,8 +6,38 @@
     <description>Recent content in Blog on Rajat Patel</description>
     <generator>Hugo -- 0.148.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Attention Mechanisms in Transformers: MHA vs MQA vs GQA</title>
+      <link>http://localhost:1313/posts/attention_mechanism/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/attention_mechanism/</guid>
+      <description>A comprehensive guide to attention variants in modern transformers: Multi-Head Attention (MHA), Multi-Query Attention (MQA), and Grouped-Query Attention (GQA), exploring their architectural differences and trade-offs.</description>
+    </item>
+    <item>
+      <title>Understanding Tokenization: From Text to Integers</title>
+      <link>http://localhost:1313/posts/tokenizers/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/tokenizers/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Language models are mathematical functions; they operate on numbers, not raw text. Tokenization is the crucial first step in converting human-readable text into a sequence of integers (tokens) that a model can process. These tokens are then mapped to embedding vectors.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;1-naive-approaches-and-their-flaws&#34;&gt;1. Naive Approaches and Their Flaws&lt;/h3&gt;
+&lt;h4 id=&#34;word-level-tokenization&#34;&gt;Word-Level Tokenization&lt;/h4&gt;
+&lt;p&gt;The most intuitive approach: split text by spaces and punctuation.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Problems&lt;/strong&gt;:
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Vocabulary Explosion&lt;/strong&gt;: A language like English has hundreds of thousands of words. The model&amp;rsquo;s vocabulary would be enormous, making the final embedding and output layers computationally massive.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Out-of-Vocabulary (OOV) Words&lt;/strong&gt;: If the model encounters a word not seen during training (e.g., a new slang term, a typo, or a technical name), it has no token for it. It typically maps it to an &lt;code&gt;&amp;lt;UNK&amp;gt;&lt;/code&gt; (unknown) token, losing all semantic meaning.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Poor Generalization&lt;/strong&gt;: The model treats &lt;code&gt;eat&lt;/code&gt;, &lt;code&gt;eating&lt;/code&gt;, and &lt;code&gt;eaten&lt;/code&gt; as three completely separate, unrelated tokens. It fails to capture the shared root &lt;code&gt;eat&lt;/code&gt;, making it harder to learn morphological relationships.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;character-level-tokenization&#34;&gt;Character-Level Tokenization&lt;/h4&gt;
+&lt;p&gt;The opposite extreme: split text into individual characters.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Reinforcement Learning Foundations: From MDPs to Deep Q-Learning</title>
       <link>http://localhost:1313/posts/reinforcement-learning-foundations/</link>
