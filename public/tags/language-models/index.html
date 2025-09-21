@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Tags | Rajat Patel</title>
+<title>Language-Models | Rajat Patel</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/tags/">
+<link rel="canonical" href="http://localhost:1313/tags/language-models/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.9e55729625902ce7e4a6e19f1f9f6b97a43813001afe9035984aa50c7fe9ede9.css" integrity="sha256-nlVyliWQLOfkpuGfH59rl6Q4EwAa/pA1mEqlDH/p7ek=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/tags/index.xml">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/tags/">
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/tags/language-models/index.xml">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/tags/language-models/">
 <noscript>
     <style>
         #theme-toggle,
@@ -76,13 +76,13 @@
           throwOnError : false
         });
     });
-</script> <meta property="og:url" content="http://localhost:1313/tags/">
+</script> <meta property="og:url" content="http://localhost:1313/tags/language-models/">
   <meta property="og:site_name" content="Rajat Patel">
-  <meta property="og:title" content="Tags">
+  <meta property="og:title" content="Language-Models">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tags">
+<meta name="twitter:title" content="Language-Models">
 <meta name="twitter:description" content="">
 
 </head>
@@ -155,40 +155,35 @@
         </ul>
     </nav>
 </header>
-<main class="main">
-<header class="page-header">
-    <h1>Tags</h1>
+<main class="main"> 
+<header class="page-header"><div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/tags/">Tags</a></div>
+  <h1>
+    Language-Models
+    <a href="/tags/language-models/index.xml" title="RSS" aria-label="RSS">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" height="23">
+        <path d="M4 11a9 9 0 0 1 9 9" />
+        <path d="M4 4a16 16 0 0 1 16 16" />
+        <circle cx="5" cy="19" r="1" />
+      </svg>
+    </a>
+  </h1>
 </header>
 
-<ul class="terms-tags">
-    <li>
-        <a href="http://localhost:1313/tags/bpe/">bpe <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/deep-learning/">deep-learning <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/language-models/">language-models <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/machine-learning/">machine-learning <sup><strong><sup>2</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/mdp/">mdp <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/nlp/">nlp <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/q-learning/">q-learning <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/reinforcement-learning/">reinforcement-learning <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-    <li>
-        <a href="http://localhost:1313/tags/tokenization/">tokenization <sup><strong><sup>1</sup></strong></sup> </a>
-    </li>
-</ul>
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Understanding Tokenization: From Text to Integers
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Introduction Language models are mathematical functions; they operate on numbers, not raw text. Tokenization is the crucial first step in converting human-readable text into a sequence of integers (tokens) that a model can process. These tokens are then mapped to embedding vectors.
+1. Naive Approaches and Their Flaws Word-Level Tokenization The most intuitive approach: split text by spaces and punctuation.
+Problems: Vocabulary Explosion: A language like English has hundreds of thousands of words. The model’s vocabulary would be enormous, making the final embedding and output layers computationally massive. Out-of-Vocabulary (OOV) Words: If the model encounters a word not seen during training (e.g., a new slang term, a typo, or a technical name), it has no token for it. It typically maps it to an &lt;UNK&gt; (unknown) token, losing all semantic meaning. Poor Generalization: The model treats eat, eating, and eaten as three completely separate, unrelated tokens. It fails to capture the shared root eat, making it harder to learn morphological relationships. Character-Level Tokenization The opposite extreme: split text into individual characters.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-01-27 00:00:00 +0000 UTC'>January 27, 2025</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;1220 words</footer>
+  <a class="entry-link" aria-label="post link to Understanding Tokenization: From Text to Integers" href="http://localhost:1313/posts/tokenizers/"></a>
+</article>
     </main>
     
 <footer class="footer">

@@ -1,4 +1,13 @@
-# Attention Mechanisms in Transformers: MHA vs MQA vs GQA
+---
+title: "Attention Mechanisms in Transformers: MHA vs MQA vs GQA"
+date: 2025-09-20
+draft: false
+showToc: true
+TocOpen: true
+tags: ["deep-learning", "transformers", "attention", "machine-learning"]
+categories: ["technical"]
+description: "A comprehensive guide to attention variants in modern transformers: Multi-Head Attention (MHA), Multi-Query Attention (MQA), and Grouped-Query Attention (GQA), exploring their architectural differences and trade-offs."
+---
 
 This guide explores the core attention variants in modern transformers, focusing on the mechanisms themselves: Multi-Head Attention (MHA), Multi-Query Attention (MQA), and Grouped-Query Attention (GQA). We'll understand why each exists and their fundamental architectural differences.
 
@@ -216,7 +225,7 @@ for head in range(num_heads):
 
 ## 5. Practical Implementation Results
 
-### Experimental Setup
+### [Experimental Setup](https://github.com/rajathpatel23/learn_gpt_oss/blob/main/src/attention_mechanism.py)
 Our implementation demonstrates these mechanisms using Shakespeare's text:
 - **Input**: *"To be or not to be, that is the question"*
 - **Model dimensions**: `d_model=256, num_heads=16, num_kv_heads=4` (for GQA)

@@ -1,4 +1,19 @@
-### Tokenization: From Text to Integers
+---
+title: "Understanding Tokenization: From Text to Integers"
+date: 2025-09-20
+draft: false
+tags: ["machine-learning", "nlp", "tokenization", "bpe", "language-models"]
+categories: ["Technical", "Tutorial"]
+showToc: true
+TocOpen: true
+math: true
+# cover:
+#     image: "/img/project_images/tokenization_cover.png"
+#     alt: "Tokenization Process"
+#     caption: "Understanding how text becomes numbers in language models"
+---
+
+## Introduction
 
 Language models are mathematical functions; they operate on numbers, not raw text. Tokenization is the crucial first step in converting human-readable text into a sequence of integers (tokens) that a model can process. These tokens are then mapped to embedding vectors.
 
@@ -151,7 +166,7 @@ Tokens: ['All', 'Ġthe', 'Ġworld', "'s", 'Ġa', 'Ġstage', ',', 'Ġand', 'Ġall
 Token Count: 15 tokens
 ```
 
-### Implementation Code
+### [Implementation Code](https://github.com/rajathpatel23/learn_gpt_oss/blob/main/src/tokenization/tokenizer.py)
 
 Our tokenizer training implementation demonstrates the BPE process:
 

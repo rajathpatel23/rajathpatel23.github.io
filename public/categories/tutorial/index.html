@@ -183,6 +183,21 @@ My fascination with RL began when the GPT-3 paper was published and ChatGPT emer
   <footer class="entry-footer"><span title='2025-08-13 00:00:00 +0000 UTC'>August 13, 2025</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;1983 words</footer>
   <a class="entry-link" aria-label="post link to Reinforcement Learning Foundations: From MDPs to Deep Q-Learning" href="http://localhost:1313/posts/reinforcement-learning-foundations/"></a>
 </article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">Understanding Tokenization: From Text to Integers
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Introduction Language models are mathematical functions; they operate on numbers, not raw text. Tokenization is the crucial first step in converting human-readable text into a sequence of integers (tokens) that a model can process. These tokens are then mapped to embedding vectors.
+1. Naive Approaches and Their Flaws Word-Level Tokenization The most intuitive approach: split text by spaces and punctuation.
+Problems: Vocabulary Explosion: A language like English has hundreds of thousands of words. The model’s vocabulary would be enormous, making the final embedding and output layers computationally massive. Out-of-Vocabulary (OOV) Words: If the model encounters a word not seen during training (e.g., a new slang term, a typo, or a technical name), it has no token for it. It typically maps it to an &lt;UNK&gt; (unknown) token, losing all semantic meaning. Poor Generalization: The model treats eat, eating, and eaten as three completely separate, unrelated tokens. It fails to capture the shared root eat, making it harder to learn morphological relationships. Character-Level Tokenization The opposite extreme: split text into individual characters.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-01-27 00:00:00 +0000 UTC'>January 27, 2025</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;1220 words</footer>
+  <a class="entry-link" aria-label="post link to Understanding Tokenization: From Text to Integers" href="http://localhost:1313/posts/tokenizers/"></a>
+</article>
     </main>
     
 <footer class="footer">
