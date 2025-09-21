@@ -6,20 +6,62 @@
     <description>Recent content in Tags on Rajat Patel</description>
     <generator>Hugo -- 0.148.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 20 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Attention</title>
+      <link>http://localhost:1313/tags/attention/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/attention/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Bpe</title>
+      <link>http://localhost:1313/tags/bpe/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/bpe/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Deep-Learning</title>
       <link>http://localhost:1313/tags/deep-learning/</link>
-      <pubDate>Wed, 13 Aug 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/deep-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Language-Models</title>
+      <link>http://localhost:1313/tags/language-models/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/language-models/</guid>
       <description></description>
     </item>
     <item>
       <title>Machine-Learning</title>
       <link>http://localhost:1313/tags/machine-learning/</link>
-      <pubDate>Wed, 13 Aug 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/machine-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Nlp</title>
+      <link>http://localhost:1313/tags/nlp/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/nlp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tokenization</title>
+      <link>http://localhost:1313/tags/tokenization/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/tokenization/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Transformers</title>
+      <link>http://localhost:1313/tags/transformers/</link>
+      <pubDate>Sat, 20 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/transformers/</guid>
       <description></description>
     </item>
     <item>
@@ -41,34 +83,6 @@
       <link>http://localhost:1313/tags/reinforcement-learning/</link>
       <pubDate>Wed, 13 Aug 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/reinforcement-learning/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Bpe</title>
-      <link>http://localhost:1313/tags/bpe/</link>
-      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/bpe/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Language-Models</title>
-      <link>http://localhost:1313/tags/language-models/</link>
-      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/language-models/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Nlp</title>
-      <link>http://localhost:1313/tags/nlp/</link>
-      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/nlp/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Tokenization</title>
-      <link>http://localhost:1313/tags/tokenization/</link>
-      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/tokenization/</guid>
       <description></description>
     </item>
   </channel>
