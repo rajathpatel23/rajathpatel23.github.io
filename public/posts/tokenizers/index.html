@@ -268,10 +268,23 @@ The opposite extreme: split text into individual characters.">
   <ul>
     <li><a href="#introduction">Introduction</a>
       <ul>
-        <li><a href="#1-naive-approaches-and-their-flaws">1. Naive Approaches and Their Flaws</a></li>
-        <li><a href="#2-the-solution-subword-tokenization">2. The Solution: Subword Tokenization</a></li>
+        <li><a href="#1-naive-approaches-and-their-flaws">1. Naive Approaches and Their Flaws</a>
+          <ul>
+            <li><a href="#word-level-tokenization">Word-Level Tokenization</a></li>
+            <li><a href="#character-level-tokenization">Character-Level Tokenization</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-the-solution-subword-tokenization">2. The Solution: Subword Tokenization</a>
+          <ul>
+            <li><a href="#algorithm-byte-pair-encoding-bpe">Algorithm: Byte-Pair Encoding (BPE)</a></li>
+          </ul>
+        </li>
         <li><a href="#bpe-training-process-visualization">BPE Training Process Visualization</a></li>
-        <li><a href="#3-modern-tokenizers-in-gpt-models">3. Modern Tokenizers in GPT Models</a></li>
+        <li><a href="#3-modern-tokenizers-in-gpt-models">3. Modern Tokenizers in GPT Models</a>
+          <ul>
+            <li><a href="#special-tokens-for-chat">Special Tokens for Chat</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#comprehensive-tokenization-comparison">Comprehensive Tokenization Comparison</a>

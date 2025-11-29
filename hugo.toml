@@ -55,7 +55,7 @@ enableRobotsTXT = true
   ShowWordCount = true
   ShowRssButtonInSectionTermList = true
   UseHugoToc = true
-  disableSpecial1stPost = false
+  disableSpecial1stPost = true
   disableScrollToTop = false
   comments = false
   hidemeta = false
@@ -97,6 +97,10 @@ enableRobotsTXT = true
 
 # Markup configuration
 [markup]
+  [markup.tableOfContents]
+    endLevel = 4
+    ordered = false
+    startLevel = 2
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true

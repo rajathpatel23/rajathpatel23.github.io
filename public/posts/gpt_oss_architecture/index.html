@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>GPT OSS Style Architectures | Rajat Patel</title>
+<meta name="keywords" content="transformers, deep-learning, architecture, GPT, attention, MoE">
+<meta name="description" content="A personal deep-dive into modern open-source GPT-style language models, covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA, attention sinks), normalization (RMSNorm), feed-forward variants (SwiGLU, MoE), and KV caching.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/gpt_oss_architecture/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.9e55729625902ce7e4a6e19f1f9f6b97a43813001afe9035984aa50c7fe9ede9.css" integrity="sha256-nlVyliWQLOfkpuGfH59rl6Q4EwAa/pA1mEqlDH/p7ek=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/gpt_oss_architecture/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          
+          
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          
+          throwOnError : false
+        });
+    });
+</script> <meta property="og:url" content="http://localhost:1313/posts/gpt_oss_architecture/">
+  <meta property="og:site_name" content="Rajat Patel">
+  <meta property="og:title" content="GPT OSS Style Architectures">
+  <meta property="og:description" content="A personal deep-dive into modern open-source GPT-style language models, covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA, attention sinks), normalization (RMSNorm), feed-forward variants (SwiGLU, MoE), and KV caching.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-11-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-11-29T00:00:00+00:00">
+    <meta property="article:tag" content="Transformers">
+    <meta property="article:tag" content="Deep-Learning">
+    <meta property="article:tag" content="Architecture">
+    <meta property="article:tag" content="GPT">
+    <meta property="article:tag" content="Attention">
+    <meta property="article:tag" content="MoE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GPT OSS Style Architectures">
+<meta name="twitter:description" content="A personal deep-dive into modern open-source GPT-style language models, covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA, attention sinks), normalization (RMSNorm), feed-forward variants (SwiGLU, MoE), and KV caching.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Blog",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "GPT OSS Style Architectures",
+      "item": "http://localhost:1313/posts/gpt_oss_architecture/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GPT OSS Style Architectures",
+  "name": "GPT OSS Style Architectures",
+  "description": "A personal deep-dive into modern open-source GPT-style language models, covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA, attention sinks), normalization (RMSNorm), feed-forward variants (SwiGLU, MoE), and KV caching.",
+  "keywords": [
+    "transformers", "deep-learning", "architecture", "GPT", "attention", "MoE"
+  ],
+  "articleBody": "This document is my personal deep-dive into how modern open-source GPT-style language models are actually built. It’s not meant to be a full survey of the literature; instead, it captures the pieces that helped me build an intuition for these models: how text becomes vectors, how positional information is injected, how attention is optimized, and how FFN variants like MoE increase capacity without blowing up compute.\n1. Tokenization \u0026 Embeddings The journey from human-readable text to a format the model understands begins here.\n1.1. Tokenization:\nFirst, raw text is converted into a sequence of integers called “tokens” using a tokenizer (e.g., Byte-Pair Encoding or BPE, as mentioned in tokenization.md). This process breaks down words into common sub-words. For example, tokenization might become [\"token\", \"ization\"]. This allows the model to handle unknown words and understand morphological similarities (e.g., run, running). The set of all possible tokens forms the model’s vocabulary. 1.2. Token Embeddings:\nProcess: Each token ID is mapped to a high-dimensional vector. Input Text: \"Hello world\" Token IDs: [15496, 995] Embeddings: [[0.1, -0.2, ...], [0.4, 0.9, ...]] // Each vector has dimension `d_model` (e.g., 2880) Goal: To represent tokens in a continuous vector space where semantic relationships are captured by distance and direction. Learned, Not Pre-trained: These embedding vectors are initialized randomly and are learned parameters. During training, the model adjusts them via backpropagation to place semantically similar tokens closer together. This is far more powerful than using static, pre-trained embeddings like Word2Vec because the meanings become contextualized to the model’s task. 2. Positional Information: Rotary Positional Embeddings (RoPE) 2.1 Why Transformers Need Positional Information As we try to understand positional embeddings, it helps to first ask why they exist at all. The self-attention mechanism by itself is position-invariant: if you shuffle the tokens and apply the same shuffle to Q, K and V, you get the same outputs, just shuffled. The math has no built-in notion of “first token”, “second token”, or “this token is 3 steps after that one”.\nThat’s a problem, because in language the order of tokens carries meaning. We want the model to know not just what the tokens are, but also where they appear and how far apart they are. To fix this, the Attention Is All You Need paper introduced positional encodings: extra information that we add to the token embeddings so that attention can take order into account.\n2.2 Sinusoidal Positional Encodings – Circle and Wavelength Intuition The original Transformer uses sinusoidal positional encodings. The idea is to associate each position index pos with an angle $\\theta$, and then use $(\\cos \\theta, \\sin \\theta)$ as a 2-D code. You can visualize this as a point moving around a unit circle:\neach position pos corresponds to some angle $\\theta(\\text{pos})$ the x-coordinate is $\\cos \\theta(\\text{pos})$ the y-coordinate is $\\sin \\theta(\\text{pos})$ Different dimensions of the positional encoding use different “speeds” around this circle, controlled by a wavelength $\\lambda$. A smaller $\\lambda$ means that as pos increases, $\\theta = \\text{pos} / \\lambda$ grows faster, so the point spins around the circle more quickly (higher frequency). A larger $\\lambda$ means a slower rotation (lower frequency). Across all dimensions you get a mix of high- and low-frequency waves over position.\nThe key bit is what happens when you move from position pos to position $\\text{pos} + k$. On the circle, that is just a rotation by a fixed angle that depends only on $k$. So the code at $\\text{pos} + k$ is the code at pos rotated by a fixed amount. Because of this, linear layers can learn to detect relative offsets (“how far apart are these two positions?”) just by looking at how their sin/cos coordinates relate. That’s what people mean when they say sinusoidal encodings make it easier for the model to attend by relative position, even though we only ever feed in absolute indices.\n2.3 Rotary Positional Embeddings (RoPE) – What GPT OSS Actually Uses The Core Idea: Instead of adding positional information to the token embedding, RoPE encodes positional information by rotating the Query and Key vectors. The amount of rotation depends on the token’s absolute position in the sequence.\nHow It Works: Vector Rotation\nPairing Dimensions: The d-dimensional Query and Key vectors are viewed as a sequence of d/2 two-dimensional vectors. For a vector v, this would be [(v_0, v_1), (v_2, v_3), ..., (v_{d-2}, v_{d-1})].\nDefining Frequencies: A set of d/2 different angular frequencies (or “wavelengths”) theta_i are defined. These are fixed and not learned, typically set to theta_i = 10000^(-2i/d). This means the first pairs rotate slowly (long wavelength) and later pairs rotate quickly (short wavelength).\nApplying Rotation: For a token at position m, each 2D pair (v_i, v_{i+1}) is rotated by an angle of m * theta_i. This is done using a 2D rotation matrix:This operation is applied to both the Query vector q and the Key vector k before the attention score is calculated.\n[x'_i] [cos(m*theta_i) -sin(m*theta_i)] [x_i] [x'_{i+1}] = [sin(m*theta_i) cos(m*theta_i)] [x_{i+1}] The Magic: Encoding Relative Position The brilliance of RoPE is that the dot product between a rotated query q' at position m and a rotated key k' at position n depends only on their relative distance m-n.\nDerivation Sketch: The dot product q'_m · k'_n can be expanded using the rotation matrix formula. After applying trigonometric identities (like cos(A-B) = cosAcosB + sinAsinB), the terms involving the absolute positions m and n cancel out, leaving a function that depends only on the original vectors q, k, and the relative position m-n. Result: The attention score between q_m and k_n becomes a function of their content and their relative distance, which is exactly what we want. Key Advantages:\nRelative Position Encoding: It naturally captures relative positional information, which is more intuitive for language. Good Extrapolation: Because it’s not tied to a fixed-length learned embedding, RoPE can generalize better to sequence lengths longer than those seen during training. Stability: Rotation is a norm-preserving operation, meaning it doesn’t change the length of the vectors, which helps maintain training stability. 2.4 Comparing different positional encoding schemes Feature Absolute (Traditional) Relative Rotary (RoPE) Method Add a vector to the token embedding Add a bias to the attention scores Rotate the token’s Q/K vectors Analogy House numbers (“House #5”) Directions (“3 steps left”) Clock angles (“angle difference”) Generalization Poor (struggles with unseen lengths) Good (invariant to shifts) Excellent (naturally encodes relative distance) Complexity Low (simple addition) High (pairwise distance computation) Medium (rotation via small matrix multiplies) 3. RMS Normalization (RMSNorm) A simple and efficient normalization layer used throughout the transformer blocks to stabilize training.\nFormula: $$ \\text{output} = \\frac{x}{\\text{RMS}(x)} \\cdot g \\quad \\text{where} \\quad \\text{RMS}(x) = \\sqrt{\\frac{1}{d}\\sum_{i=1}^{d} x_i^2 + \\epsilon} $$\nx is the input vector, g (gain) is a learned parameter vector, and epsilon is a small constant for numerical stability. Advantages over LayerNorm: Simplicity \u0026 Speed: By omitting the mean-centering step of LayerNorm (x - mean(x)), RMSNorm is computationally simpler and faster (~7-14% on GPUs). Equivalent Performance: In practice, for large transformer models, the centering operation provides little to no benefit, and RMSNorm performs just as well or better. The network can implicitly learn to offset values if needed. 4. The Transformer Block The core repeating unit of the model. A model is a deep stack of these blocks. A single block consists of two main sub-layers: an attention mechanism and a feed-forward network.\n4.1. Attention Sub-Layer This layer allows tokens to “look at” and gather information from other tokens in the sequence.\nOptimized Attention Variants: To manage the computational and memory costs of standard Multi-Head Attention (MHA), modern models use more efficient variants. Variant Query (Q) Heads Key (K) Heads Value (V) Heads Benefit Multi-Head (MHA) N N N High model quality, high memory cost. Multi-Query (MQA) N 1 1 Drastically reduces KV cache size, fastest inference. Grouped-Query (GQA) N G (e.g., 4) G (e.g., 4) A balance between MHA’s quality and MQA’s speed. Sliding Window Attention (SWA): To handle very long sequences efficiently, some models employ SWA. Instead of allowing every token to attend to every other previous token (which has a quadratic O(n^2) cost), SWA restricts each token to only attend to a fixed-size window of recent tokens (e.g., the last 4096 tokens). Benefit: This reduces the computational complexity to O(n * w), where w is the window size, enabling the model to process much longer contexts with a linear cost.\nExample: The Mistral 7B model is a prominent example that uses Sliding Window Attention to achieve a large effective context window while maintaining high efficiency. Interaction with KV Cache: SWA’s most significant impact is on the KV Cache. Instead of growing indefinitely, the cache becomes a fixed-size rolling buffer. It only needs to store the keys and values for the last w tokens. When a new token is generated, the oldest token’s K/V pair is discarded, and the new one is added. This keeps memory usage constant and bounded, regardless of the total sequence length. 4.1.1 Information Propagation Beyond the Sliding Window A common question about SWA is: if a token can only see the last W tokens, isn’t all prior information lost? The answer is no, due to a transitive information flow. Information from outside the window is not accessed directly, but its essence is carried forward through two mechanisms:\nHorizontal Propagation (Token-to-Token):\nThe token at position N attends to the token at position N-1. The token at N-1 has already attended to the token at N-2, and so on, back to N-W. Therefore, the representation of token N-1 contains a summary of its own attention window. When token N attends to N-1, it indirectly accesses this summarized information. This creates a “ripple effect” where the semantic context is passed down from one token to the next. Vertical Propagation (Layer-to-Layer):\nThis effect is amplified across the model’s layers. The output representation of a token from Layer 1, which has gathered information from its local window, becomes the input to Layer 2. In Layer 2, when a token attends to its neighbors, it’s attending to representations that have already summarized information from the previous layer. Because of this, the “effective receptive field” of a token grows with each layer. By the final layer, a token’s representation has been influenced by information that originated far outside its immediate W-sized attention window. KV Cache Size Impact: The choice of attention mechanism directly impacts the size of the KV Cache. MQA and GQA reduce the cache size by reducing the number of K/V heads. SWA reduces it by limiting the sequence length dimension of the cache. 4.1.2. Attention Bias Definition: The attention logits are computed as attn_logits = (Q @ K^T) * scale + bias, where bias is added before the softmax and can be broadcast across heads and/or sequence positions. Typical shapes: [num_heads, 1, seq_len, seq_len], [1, seq_len, seq_len], or block-sparse masks. Common uses: Causal Masking: Setting scores for future tokens to -infinity to prevent a token from “cheating” and seeing the future. This is essential for auto-regressive generation. Attention Linear Bias (ALiBi) (linear distance penalty): Implementing alternative positional encoding schemes like ALiBi (Attention with Linear Biases), where the bias penalizes attention between distant tokens. Relative position bias (T5-style): Learned bucketed biases that favor nearby tokens without explicit rotations. Segment/turn/document biases: Down-weight cross-segment attention (e.g., between chat turns) or up-weight separators. Task-specific nudges: Small positive bias to encourage attending to prefixes, BOS, or special control tokens. Implementation notes: The bias is added additively and can be static (no gradients; e.g., causal mask, ALiBi) or learned. Works independently of RoPE/MQA/GQA and with FlashAttention by fusing masks/biases into the softmax kernel. Memory cost is minimal due to broadcasting; compute overhead is negligible. 4.1.3. Attention Sinks Intuition: Reserve a small number of early positions (e.g., the first m tokens) as “sink” tokens that every query can always attend to. These serve as stable anchors that preserve global context, especially under streaming or sliding-window inference. Why it helps: Prevents quality drop when tokens outside the current window are no longer directly visible. Provides a consistent fallback target, stabilizing attention distributions and downstream normalization statistics. Acts like a “heat sink”: it can absorb a small, consistent fraction of attention mass to avoid brittle sparsity. Mechanism: Keep the K/V for the sink positions permanently in the KV cache, even when using SWA that evicts old tokens. Add a small positive bias +b_sink to logits targeting sink indices so that they receive a modest probability mass after softmax (e.g., 1–5%). Optionally insert dedicated sink tokens (or reuse BOS) with embeddings tuned for summarization/aggregation. Practical guidance: Choose m in the range 1–4; set b_sink to achieve a small but nontrivial attention share. Can be introduced at inference-time only, but works best if the model is trained or finetuned with sink behavior. Compatible with RoPE, MQA/GQA, SWA, and FlashAttention. Reference: Efficient Streaming of Language Models with Attention Sinks (arXiv:2309.17453). # Pseudocode (inference-time biasing with m sink tokens) def add_attention_bias(attn_logits, sink_indices, b_sink): # attn_logits: [batch, heads, q_len, k_len] # sink_indices: list/tensor of length m with K-side positions to favor attn_logits[..., sink_indices] += b_sink return attn_logits # With sliding-window caching: always retain K/V at sink_indices def update_kv_cache(cache, new_k, new_v, sink_indices, window_size): # Keep sinks + last (window_size - len(sink_indices)) positions retained = concat(cache.kv_at(sink_indices), cache.kv_last(window_size - len(sink_indices))) cache.k, cache.v = roll_and_append(retained, new_k, new_v) return cache 4.2. Feed-Forward Network (FFN) Sub-Layer This is where the model does much of its “thinking” and knowledge recall.\nStandard FFN: A simple two-layer MLP: FFN(x) = ReLU(x @ W1 + b1) @ W2 + b2.\nSwiGLU Variant: Modern models often use a more advanced variant called SwiGLU (Gated Linear Unit with a Swish/SiLU activation) for better performance.\nSwiGLU(x) = (SiLU(x @ W1) * (x @ W_gate)) @ W2\nIt uses three weight matrices instead of two. The gating mechanism (x @ W_gate) allows the network to dynamically control how much information flows through the main path, leading to improved training and final model quality. Mixture of Experts (MoE): To scale up model size efficiently, the FFN sub-layer can be replaced with an MoE layer.\nArchitecture: Instead of one large FFN, there are multiple smaller FFNs (the “experts”). Routing: A small “gating network” or “router” (a simple linear layer + softmax) looks at each token’s hidden state and outputs probabilities for which expert should process it. Sparse Activation: Typically, only the top-2 experts are chosen for each token. The final output is a weighted sum of the outputs from these two experts. Benefit: This allows for a massive increase in the total number of parameters in the model, while the computational cost per token remains constant. A “load balancing loss” is often added during training to ensure all experts are utilized. Load Balancing Loss – My Mental Picture\nMixture-of-Experts only helps if different experts actually get used. In practice, the router tends to fall in love with a few “easy win” experts early in training and send almost every token to them. Those experts get lots of gradient updates and become even better, while the others starve and never learn anything useful. This is called router collapse.\nTo prevent that, modern MoE layers add a small auxiliary load balancing loss. Over a batch of tokens, we look at two things for each expert:\nhow much the router wants to use that expert (its average routing probability), and how many tokens actually go to that expert (its share of the routed tokens). The load balancing loss pushes these quantities toward being roughly uniform across experts. Intuitively, it penalizes solutions where one expert is overloaded and others are idle. The main language modeling loss still decides what each expert should learn, but the load balancing loss makes sure every expert gets a steady stream of training data instead of the router sending everything to a single “favorite” expert.\n4.3. Residual Connections Residual connections (or “skip connections”) are the architectural glue that holds the transformer block together and, more importantly, allows the model to be trained at great depths.\nHow it Works: A residual connection is a direct data path that bypasses a sub-layer (like attention or FFN). The output of the sub-layer is then added to the original input that went into it.\noutput = input + SubLayer(LayerNorm(input))\nWhy They Are Critical:\nCombating Vanishing Gradients: This is the primary reason for their existence. In very deep networks, gradients can shrink exponentially as they are propagated backward from the final layer to the initial layers. This causes the early layers to learn extremely slowly or not at all. The residual connection acts as an “information superhighway,” allowing the gradient to flow directly and unimpeded back through the network. This ensures that even the earliest layers receive a strong learning signal. Preserving Information: Each sub-layer transforms its input. The residual connection guarantees that the original, untransformed information from the beginning of the block is carried forward. The sub-layer’s job is simplified: it only needs to learn the residual—the change or update that should be applied to the original vector—rather than the entire transformation from scratch. This makes learning easier and prevents information loss. Without residual connections, training transformers with dozens or hundreds of layers would be practically impossible.\n5. Key-Value (KV) Cache A critical optimization that makes auto-regressive text generation practical and fast.\nThe Problem: During generation, to predict token N+1, the model needs to attend to all previous tokens 1...N. Naively re-calculating the Key (K) and Value (V) vectors for the entire context at every single step is computationally prohibitive. The Solution: The KV cache is a memory buffer that stores the K and V vectors once they are computed. Step 1: Process prompt “The cat”. Compute and cache K_the, V_the, K_cat, V_cat. Step 2: Generate next token. Let’s say it’s “sat”. The model computes Q_sat and attends to the cached [K_the, K_cat] and [V_the, V_cat]. Step 3: After generating “sat”, compute K_sat and V_sat and append them to the cache. The cache now holds K/V for “The cat sat”. Note: With Sliding Window Attention, this cache would be a fixed-size rolling buffer rather than an ever-growing list (see section 4.1). This turns a quadratic operation (recomputing everything) into a linear one (computing for one new token), making generation feasible for long sequences. 6. Overall Architecture \u0026 Workflow Putting it all together, a GPT-style model processes data roughly like this:\nInput\nRaw text is passed to the tokenizer, producing a sequence of token IDs.\nEmbedding layer\nToken IDs are converted into token embeddings. Positional information (e.g., RoPE) is applied to the Q/K projections inside attention layers.\nTransformer blocks (stacked L times)\nThe sequence is processed through L identical blocks. For each block:\na. Pre-attention norm\nx_norm1 = RMSNorm(x)\nb. Attention\nattn_out = GQA(Q = x_norm1, K = x_norm1, V = x_norm1)\n(with RoPE applied to Q and K, plus any attention bias, SWA masking, sinks, etc.)\nc. First residual\nx_res1 = x + attn_out\nd. Pre-FFN norm\nx_norm2 = RMSNorm(x_res1)\ne. Feed-forward / MoE\nffn_out = MoE(x_norm2) (or a SwiGLU FFN in non-MoE models)\nf. Second residual\nx = x_res1 + ffn_out\n(this x becomes the input to the next block)\nFinal projection\na. Apply a final RMSNorm to the last block’s output.\nb. Use a linear layer (the LM head) to project to vocabulary size, producing logits for each token position.\nSoftmax \u0026 loss\nDuring training, apply softmax to get probabilities and use cross-entropy against the next token as the main loss. For MoE layers, add the auxiliary load balancing loss on top. Inference loop \u0026 KV cache\nFor generation, the model runs step-by-step:\nFor each new token, compute Q (and the new K/V), attend to cached past keys/values, and append the new K/V to the KV cache. With Sliding Window Attention, the KV cache becomes a rolling buffer that only retains the last W tokens (plus any sink positions), keeping memory usage bounded even for long conversations. ",
+  "wordCount" : "3309",
+  "inLanguage": "en",
+  "datePublished": "2025-11-29T00:00:00Z",
+  "dateModified": "2025-11-29T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/gpt_oss_architecture/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Rajat Patel",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Rajat Patel (Alt + H)">Rajat Patel</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/research/" title="Research">
+                    <span>Research</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/vitae/" title="CV">
+                    <span>CV</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Blog</a></div>
+    <h1 class="post-title entry-hint-parent">
+      GPT OSS Style Architectures
+    </h1>
+    <div class="post-description">
+      A personal deep-dive into modern open-source GPT-style language models, covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA, attention sinks), normalization (RMSNorm), feed-forward variants (SwiGLU, MoE), and KV caching.
+    </div>
+    <div class="post-meta"><span title='2025-11-29 00:00:00 +0000 UTC'>November 29, 2025</span>&nbsp;·&nbsp;16 min&nbsp;·&nbsp;3309 words
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-tokenization--embeddings">1. Tokenization &amp; Embeddings</a></li>
+    <li><a href="#2-positional-information-rotary-positional-embeddings-rope">2. Positional Information: Rotary Positional Embeddings (RoPE)</a>
+      <ul>
+        <li><a href="#21-why-transformers-need-positional-information">2.1 Why Transformers Need Positional Information</a></li>
+        <li><a href="#22-sinusoidal-positional-encodings--circle-and-wavelength-intuition">2.2 Sinusoidal Positional Encodings – Circle and Wavelength Intuition</a></li>
+        <li><a href="#23-rotary-positional-embeddings-rope--what-gpt-oss-actually-uses">2.3 Rotary Positional Embeddings (RoPE) – What GPT OSS Actually Uses</a></li>
+        <li><a href="#24-comparing-different-positional-encoding-schemes">2.4 Comparing different positional encoding schemes</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-rms-normalization-rmsnorm">3. RMS Normalization (RMSNorm)</a></li>
+    <li><a href="#4-the-transformer-block">4. The Transformer Block</a>
+      <ul>
+        <li><a href="#41-attention-sub-layer">4.1. Attention Sub-Layer</a>
+          <ul>
+            <li><a href="#411--information-propagation-beyond-the-sliding-window">4.1.1  Information Propagation Beyond the Sliding Window</a></li>
+            <li><a href="#412-attention-bias">4.1.2. Attention Bias</a></li>
+            <li><a href="#413-attention-sinks">4.1.3. Attention Sinks</a></li>
+          </ul>
+        </li>
+        <li><a href="#42-feed-forward-network-ffn-sub-layer">4.2. Feed-Forward Network (FFN) Sub-Layer</a></li>
+        <li><a href="#43-residual-connections">4.3. Residual Connections</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-key-value-kv-cache">5. Key-Value (KV) Cache</a></li>
+    <li><a href="#6-overall-architecture--workflow">6. Overall Architecture &amp; Workflow</a></li>
+  </ul>
+</nav>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>This document is my personal deep-dive into how modern open-source GPT-style language models are actually built. It&rsquo;s not meant to be a full survey of the literature; instead, it captures the pieces that helped <em>me</em> build an intuition for these models: how text becomes vectors, how positional information is injected, how attention is optimized, and how FFN variants like MoE increase capacity without blowing up compute.</p>
+<hr>
+<h2 id="1-tokenization--embeddings">1. Tokenization &amp; Embeddings<a hidden class="anchor" aria-hidden="true" href="#1-tokenization--embeddings">#</a></h2>
+<p>The journey from human-readable text to a format the model understands begins here.</p>
+<ul>
+<li>
+<p><strong>1.1. Tokenization</strong>:</p>
+<ul>
+<li>First, raw text is converted into a sequence of integers called &ldquo;tokens&rdquo; using a tokenizer (e.g., Byte-Pair Encoding or BPE, as mentioned in <code>tokenization.md</code>).</li>
+<li>This process breaks down words into common sub-words. For example, <code>tokenization</code> might become <code>[&quot;token&quot;, &quot;ization&quot;]</code>. This allows the model to handle unknown words and understand morphological similarities (e.g., <code>run</code>, <code>running</code>).</li>
+<li>The set of all possible tokens forms the model&rsquo;s <strong>vocabulary</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>1.2. Token Embeddings</strong>:</p>
+<ul>
+<li><strong>Process</strong>: Each token ID is mapped to a high-dimensional vector.
+<pre tabindex="0"><code>Input Text: &#34;Hello world&#34;
+Token IDs:  [15496, 995]
+Embeddings: [[0.1, -0.2, ...], [0.4, 0.9, ...]]  // Each vector has dimension `d_model` (e.g., 2880)
+</code></pre></li>
+<li><strong>Goal</strong>: To represent tokens in a continuous vector space where semantic relationships are captured by distance and direction.</li>
+<li><strong>Learned, Not Pre-trained</strong>: These embedding vectors are initialized randomly and are <strong>learned parameters</strong>. During training, the model adjusts them via backpropagation to place semantically similar tokens closer together. This is far more powerful than using static, pre-trained embeddings like Word2Vec because the meanings become contextualized to the model&rsquo;s task.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-positional-information-rotary-positional-embeddings-rope">2. Positional Information: Rotary Positional Embeddings (RoPE)<a hidden class="anchor" aria-hidden="true" href="#2-positional-information-rotary-positional-embeddings-rope">#</a></h2>
+<h3 id="21-why-transformers-need-positional-information">2.1 Why Transformers Need Positional Information<a hidden class="anchor" aria-hidden="true" href="#21-why-transformers-need-positional-information">#</a></h3>
+<p>As we try to understand positional embeddings, it helps to first ask why they exist at all. The self-attention mechanism by itself is <strong>position-invariant</strong>: if you shuffle the tokens and apply the same shuffle to Q, K and V, you get the same outputs, just shuffled. The math has no built-in notion of “first token”, “second token”, or “this token is 3 steps after that one”.</p>
+<p>That’s a problem, because in language the order of tokens carries meaning. We want the model to know not just <em>what</em> the tokens are, but also <em>where</em> they appear and how far apart they are. To fix this, the <em>Attention Is All You Need</em> paper introduced <strong>positional encodings</strong>: extra information that we add to the token embeddings so that attention can take order into account.</p>
+<hr>
+<h3 id="22-sinusoidal-positional-encodings--circle-and-wavelength-intuition">2.2 Sinusoidal Positional Encodings – Circle and Wavelength Intuition<a hidden class="anchor" aria-hidden="true" href="#22-sinusoidal-positional-encodings--circle-and-wavelength-intuition">#</a></h3>
+<p>The original Transformer uses <strong>sinusoidal positional encodings</strong>. The idea is to associate each position index <code>pos</code> with an angle $\theta$, and then use $(\cos \theta, \sin \theta)$ as a 2-D code. You can visualize this as a point moving around a <strong>unit circle</strong>:</p>
+<ul>
+<li>each position <code>pos</code> corresponds to some angle $\theta(\text{pos})$</li>
+<li>the x-coordinate is $\cos \theta(\text{pos})$</li>
+<li>the y-coordinate is $\sin \theta(\text{pos})$</li>
+</ul>
+<p>Different dimensions of the positional encoding use different &ldquo;speeds&rdquo; around this circle, controlled by a <strong>wavelength</strong> $\lambda$. A smaller $\lambda$ means that as <code>pos</code> increases, $\theta = \text{pos} / \lambda$ grows faster, so the point spins around the circle more quickly (higher frequency). A larger $\lambda$ means a slower rotation (lower frequency). Across all dimensions you get a mix of high- and low-frequency waves over position.</p>
+<p>The key bit is what happens when you move from position <code>pos</code> to position $\text{pos} + k$. On the circle, that is just a <strong>rotation by a fixed angle</strong> that depends only on $k$. So the code at $\text{pos} + k$ is the code at <code>pos</code> rotated by a fixed amount. Because of this, linear layers can learn to detect <strong>relative offsets</strong> (&ldquo;how far apart are these two positions?&rdquo;) just by looking at how their sin/cos coordinates relate. That&rsquo;s what people mean when they say sinusoidal encodings make it easier for the model to attend by <em>relative</em> position, even though we only ever feed in absolute indices.</p>
+<h3 id="23-rotary-positional-embeddings-rope--what-gpt-oss-actually-uses">2.3 Rotary Positional Embeddings (RoPE) – What GPT OSS Actually Uses<a hidden class="anchor" aria-hidden="true" href="#23-rotary-positional-embeddings-rope--what-gpt-oss-actually-uses">#</a></h3>
+<p><img alt="Positional Encoding Visualization" loading="lazy" src="/img/pos_encoding.png"></p>
+<p><strong>The Core Idea</strong>: Instead of adding positional information to the token embedding, RoPE encodes positional information by <strong>rotating</strong> the Query and Key vectors. The amount of rotation depends on the token&rsquo;s absolute position in the sequence.</p>
+<ul>
+<li>
+<p><strong>How It Works: Vector Rotation</strong></p>
+<ol>
+<li>
+<p><strong>Pairing Dimensions</strong>: The <code>d</code>-dimensional Query and Key vectors are viewed as a sequence of <code>d/2</code> two-dimensional vectors. For a vector <code>v</code>, this would be <code>[(v_0, v_1), (v_2, v_3), ..., (v_{d-2}, v_{d-1})]</code>.</p>
+</li>
+<li>
+<p><strong>Defining Frequencies</strong>: A set of <code>d/2</code> different angular frequencies (or &ldquo;wavelengths&rdquo;) <code>theta_i</code> are defined. These are fixed and not learned, typically set to <code>theta_i = 10000^(-2i/d)</code>. This means the first pairs rotate slowly (long wavelength) and later pairs rotate quickly (short wavelength).</p>
+</li>
+<li>
+<p><strong>Applying Rotation</strong>: For a token at position <code>m</code>, each 2D pair <code>(v_i, v_{i+1})</code> is rotated by an angle of <code>m * theta_i</code>. This is done using a 2D rotation matrix:This operation is applied to both the Query vector <code>q</code> and the Key vector <code>k</code> before the attention score is calculated.</p>
+<pre tabindex="0"><code>[x&#39;_i]   [cos(m*theta_i)  -sin(m*theta_i)] [x_i]
+[x&#39;_{i+1}] = [sin(m*theta_i)   cos(m*theta_i)] [x_{i+1}]
+</code></pre></li>
+</ol>
+</li>
+<li>
+<p><strong>The Magic: Encoding Relative Position</strong> The brilliance of RoPE is that the dot product between a rotated query <code>q'</code> at position <code>m</code> and a rotated key <code>k'</code> at position <code>n</code> depends <em>only on their relative distance <code>m-n</code></em>.</p>
+<ul>
+<li><strong>Derivation Sketch</strong>: The dot product <code>q'_m · k'_n</code> can be expanded using the rotation matrix formula. After applying trigonometric identities (like <code>cos(A-B) = cosAcosB + sinAsinB</code>), the terms involving the absolute positions <code>m</code> and <code>n</code> cancel out, leaving a function that depends only on the original vectors <code>q</code>, <code>k</code>, and the relative position <code>m-n</code>.</li>
+<li><strong>Result</strong>: The attention score between <code>q_m</code> and <code>k_n</code> becomes a function of their content and their relative distance, which is exactly what we want.</li>
+</ul>
+</li>
+<li>
+<p><strong>Key Advantages</strong>:</p>
+<ol>
+<li><strong>Relative Position Encoding</strong>: It naturally captures relative positional information, which is more intuitive for language.</li>
+<li><strong>Good Extrapolation</strong>: Because it&rsquo;s not tied to a fixed-length learned embedding, RoPE can generalize better to sequence lengths longer than those seen during training.</li>
+<li><strong>Stability</strong>: Rotation is a norm-preserving operation, meaning it doesn&rsquo;t change the length of the vectors, which helps maintain training stability.</li>
+</ol>
+</li>
+</ul>
+<h3 id="24-comparing-different-positional-encoding-schemes">2.4 Comparing different positional encoding schemes<a hidden class="anchor" aria-hidden="true" href="#24-comparing-different-positional-encoding-schemes">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Feature</th>
+          <th>Absolute (Traditional)</th>
+          <th>Relative</th>
+          <th>Rotary (RoPE)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Method</td>
+          <td>Add a vector to the token embedding</td>
+          <td>Add a bias to the attention scores</td>
+          <td>Rotate the token’s Q/K vectors</td>
+      </tr>
+      <tr>
+          <td>Analogy</td>
+          <td>House numbers (“House #5”)</td>
+          <td>Directions (“3 steps left”)</td>
+          <td>Clock angles (“angle difference”)</td>
+      </tr>
+      <tr>
+          <td>Generalization</td>
+          <td>Poor (struggles with unseen lengths)</td>
+          <td>Good (invariant to shifts)</td>
+          <td>Excellent (naturally encodes relative distance)</td>
+      </tr>
+      <tr>
+          <td>Complexity</td>
+          <td>Low (simple addition)</td>
+          <td>High (pairwise distance computation)</td>
+          <td>Medium (rotation via small matrix multiplies)</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="3-rms-normalization-rmsnorm">3. RMS Normalization (RMSNorm)<a hidden class="anchor" aria-hidden="true" href="#3-rms-normalization-rmsnorm">#</a></h2>
+<p>A simple and efficient normalization layer used throughout the transformer blocks to stabilize training.</p>
+<ul>
+<li><strong>Formula</strong>:</li>
+</ul>
+<p>$$
+\text{output} = \frac{x}{\text{RMS}(x)} \cdot g \quad \text{where} \quad \text{RMS}(x) = \sqrt{\frac{1}{d}\sum_{i=1}^{d} x_i^2 + \epsilon}
+$$</p>
+<ul>
+<li><code>x</code> is the input vector, <code>g</code> (gain) is a learned parameter vector, and <code>epsilon</code> is a small constant for numerical stability.</li>
+<li><strong>Advantages over LayerNorm</strong>:
+<ul>
+<li><strong>Simplicity &amp; Speed</strong>: By omitting the mean-centering step of LayerNorm (<code>x - mean(x)</code>), RMSNorm is computationally simpler and faster (~7-14% on GPUs).</li>
+<li><strong>Equivalent Performance</strong>: In practice, for large transformer models, the centering operation provides little to no benefit, and RMSNorm performs just as well or better. The network can implicitly learn to offset values if needed.</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-the-transformer-block">4. The Transformer Block<a hidden class="anchor" aria-hidden="true" href="#4-the-transformer-block">#</a></h2>
+<p>The core repeating unit of the model. A model is a deep stack of these blocks. A single block consists of two main sub-layers: an attention mechanism and a feed-forward network.</p>
+<h3 id="41-attention-sub-layer">4.1. Attention Sub-Layer<a hidden class="anchor" aria-hidden="true" href="#41-attention-sub-layer">#</a></h3>
+<p>This layer allows tokens to &ldquo;look at&rdquo; and gather information from other tokens in the sequence.</p>
+<ul>
+<li><strong>Optimized Attention Variants</strong>: To manage the computational and memory costs of standard Multi-Head Attention (MHA), modern models use more efficient variants.</li>
+</ul>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Variant</th>
+          <th style="text-align: left">Query (Q) Heads</th>
+          <th style="text-align: left">Key (K) Heads</th>
+          <th style="text-align: left">Value (V) Heads</th>
+          <th style="text-align: left">Benefit</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Multi-Head (MHA)</strong></td>
+          <td style="text-align: left">N</td>
+          <td style="text-align: left">N</td>
+          <td style="text-align: left">N</td>
+          <td style="text-align: left">High model quality, high memory cost.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Multi-Query (MQA)</strong></td>
+          <td style="text-align: left">N</td>
+          <td style="text-align: left">1</td>
+          <td style="text-align: left">1</td>
+          <td style="text-align: left">Drastically reduces KV cache size, fastest inference.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Grouped-Query (GQA)</strong></td>
+          <td style="text-align: left">N</td>
+          <td style="text-align: left">G (e.g., 4)</td>
+          <td style="text-align: left">G (e.g., 4)</td>
+          <td style="text-align: left">A balance between MHA&rsquo;s quality and MQA&rsquo;s speed.</td>
+      </tr>
+  </tbody>
+</table>
+<ul>
+<li><strong>Sliding Window Attention (SWA)</strong>: To handle very long sequences efficiently, some models employ SWA. Instead of allowing every token to attend to every other previous token (which has a quadratic <code>O(n^2)</code> cost), SWA restricts each token to only attend to a fixed-size window of recent tokens (e.g., the last 4096 tokens).</li>
+</ul>
+<p><img alt="Sliding Window Attention" loading="lazy" src="/img/swa.png"></p>
+<p><img alt="Attention Mask Comparison: Full Causal vs Sliding Window" loading="lazy" src="/img/swa_matrix.png"></p>
+<p><strong>Benefit</strong>: This reduces the computational complexity to <code>O(n * w)</code>, where <code>w</code> is the window size, enabling the model to process much longer contexts with a linear cost.</p>
+<ul>
+<li><strong>Example</strong>: The Mistral 7B model is a prominent example that uses Sliding Window Attention to achieve a large effective context window while maintaining high efficiency.</li>
+<li><strong>Interaction with KV Cache</strong>: SWA&rsquo;s most significant impact is on the KV Cache. Instead of growing indefinitely, the cache becomes a <strong>fixed-size rolling buffer</strong>. It only needs to store the keys and values for the last <code>w</code> tokens. When a new token is generated, the oldest token&rsquo;s K/V pair is discarded, and the new one is added. This keeps memory usage constant and bounded, regardless of the total sequence length.</li>
+</ul>
+<h4 id="411--information-propagation-beyond-the-sliding-window">4.1.1  Information Propagation Beyond the Sliding Window<a hidden class="anchor" aria-hidden="true" href="#411--information-propagation-beyond-the-sliding-window">#</a></h4>
+<p>A common question about SWA is: if a token can only see the last <code>W</code> tokens, isn&rsquo;t all prior information lost? The answer is <strong>no</strong>, due to a transitive information flow. Information from outside the window is not accessed directly, but its essence is carried forward through two mechanisms:</p>
+<ol>
+<li>
+<p><strong>Horizontal Propagation (Token-to-Token)</strong>:</p>
+<ul>
+<li>The token at position <code>N</code> attends to the token at position <code>N-1</code>.</li>
+<li>The token at <code>N-1</code> has already attended to the token at <code>N-2</code>, and so on, back to <code>N-W</code>.</li>
+<li>Therefore, the representation of token <code>N-1</code> contains a summary of its own attention window. When token <code>N</code> attends to <code>N-1</code>, it indirectly accesses this summarized information. This creates a &ldquo;ripple effect&rdquo; where the semantic context is passed down from one token to the next.</li>
+</ul>
+</li>
+<li>
+<p><strong>Vertical Propagation (Layer-to-Layer)</strong>:</p>
+<ul>
+<li>This effect is amplified across the model&rsquo;s layers. The output representation of a token from Layer 1, which has gathered information from its local window, becomes the <em>input</em> to Layer 2.</li>
+<li>In Layer 2, when a token attends to its neighbors, it&rsquo;s attending to representations that have <em>already</em> summarized information from the previous layer.</li>
+<li>Because of this, the &ldquo;effective receptive field&rdquo; of a token grows with each layer. By the final layer, a token&rsquo;s representation has been influenced by information that originated far outside its immediate <code>W</code>-sized attention window.</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><strong>KV Cache Size Impact</strong>: The choice of attention mechanism directly impacts the size of the KV Cache. MQA and GQA reduce the cache size by reducing the number of K/V heads. SWA reduces it by limiting the sequence length dimension of the cache.</li>
+</ul>
+<h4 id="412-attention-bias">4.1.2. Attention Bias<a hidden class="anchor" aria-hidden="true" href="#412-attention-bias">#</a></h4>
+<ul>
+<li><strong>Definition</strong>: The attention logits are computed as <code>attn_logits = (Q @ K^T) * scale + bias</code>, where <code>bias</code> is added before the softmax and can be broadcast across heads and/or sequence positions.
+<ul>
+<li>Typical shapes: <code>[num_heads, 1, seq_len, seq_len]</code>, <code>[1, seq_len, seq_len]</code>, or block-sparse masks.</li>
+</ul>
+</li>
+<li><strong>Common uses</strong>:
+<ul>
+<li><strong>Causal Masking</strong>: Setting scores for future tokens to <code>-infinity</code> to prevent a token from &ldquo;cheating&rdquo; and seeing the future. This is essential for auto-regressive generation.</li>
+<li><strong>Attention Linear Bias (ALiBi) (linear distance penalty)</strong>: Implementing alternative positional encoding schemes like ALiBi (Attention with Linear Biases), where the bias penalizes attention between distant tokens.</li>
+<li><strong>Relative position bias (T5-style)</strong>: Learned bucketed biases that favor nearby tokens without explicit rotations.</li>
+<li><strong>Segment/turn/document biases</strong>: Down-weight cross-segment attention (e.g., between chat turns) or up-weight separators.</li>
+<li><strong>Task-specific nudges</strong>: Small positive bias to encourage attending to prefixes, BOS, or special control tokens.</li>
+</ul>
+</li>
+<li><strong>Implementation notes</strong>:
+<ul>
+<li>The bias is added additively and can be static (no gradients; e.g., causal mask, ALiBi) or learned.</li>
+<li>Works independently of RoPE/MQA/GQA and with FlashAttention by fusing masks/biases into the softmax kernel.</li>
+<li>Memory cost is minimal due to broadcasting; compute overhead is negligible.</li>
+</ul>
+</li>
+</ul>
+<h4 id="413-attention-sinks">4.1.3. Attention Sinks<a hidden class="anchor" aria-hidden="true" href="#413-attention-sinks">#</a></h4>
+<ul>
+<li><strong>Intuition</strong>: Reserve a small number of early positions (e.g., the first <code>m</code> tokens) as &ldquo;sink&rdquo; tokens that every query can always attend to. These serve as stable anchors that preserve global context, especially under streaming or sliding-window inference.</li>
+<li><strong>Why it helps</strong>:
+<ul>
+<li>Prevents quality drop when tokens outside the current window are no longer directly visible.</li>
+<li>Provides a consistent fallback target, stabilizing attention distributions and downstream normalization statistics.</li>
+<li>Acts like a &ldquo;heat sink&rdquo;: it can absorb a small, consistent fraction of attention mass to avoid brittle sparsity.</li>
+</ul>
+</li>
+<li><strong>Mechanism</strong>:
+<ul>
+<li>Keep the K/V for the sink positions permanently in the KV cache, even when using SWA that evicts old tokens.</li>
+<li>Add a small positive bias <code>+b_sink</code> to logits targeting sink indices so that they receive a modest probability mass after softmax (e.g., 1–5%).</li>
+<li>Optionally insert dedicated sink tokens (or reuse BOS) with embeddings tuned for summarization/aggregation.</li>
+</ul>
+</li>
+<li><strong>Practical guidance</strong>:
+<ul>
+<li>Choose <code>m</code> in the range 1–4; set <code>b_sink</code> to achieve a small but nontrivial attention share.</li>
+<li>Can be introduced at inference-time only, but works best if the model is trained or finetuned with sink behavior.</li>
+<li>Compatible with RoPE, MQA/GQA, SWA, and FlashAttention.</li>
+</ul>
+</li>
+<li><strong>Reference</strong>: Efficient Streaming of Language Models with Attention Sinks (<a href="https://arxiv.org/pdf/2309.17453">arXiv:2309.17453</a>).</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Pseudocode (inference-time biasing with m sink tokens)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_attention_bias</span>(attn_logits, sink_indices, b_sink):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># attn_logits: [batch, heads, q_len, k_len]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># sink_indices: list/tensor of length m with K-side positions to favor</span>
+</span></span><span style="display:flex;"><span>    attn_logits[<span style="color:#f92672">...</span>, sink_indices] <span style="color:#f92672">+=</span> b_sink
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> attn_logits
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># With sliding-window caching: always retain K/V at sink_indices</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">update_kv_cache</span>(cache, new_k, new_v, sink_indices, window_size):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Keep sinks + last (window_size - len(sink_indices)) positions</span>
+</span></span><span style="display:flex;"><span>    retained <span style="color:#f92672">=</span> concat(cache<span style="color:#f92672">.</span>kv_at(sink_indices), cache<span style="color:#f92672">.</span>kv_last(window_size <span style="color:#f92672">-</span> len(sink_indices)))
+</span></span><span style="display:flex;"><span>    cache<span style="color:#f92672">.</span>k, cache<span style="color:#f92672">.</span>v <span style="color:#f92672">=</span> roll_and_append(retained, new_k, new_v)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> cache
+</span></span></code></pre></div><h3 id="42-feed-forward-network-ffn-sub-layer">4.2. Feed-Forward Network (FFN) Sub-Layer<a hidden class="anchor" aria-hidden="true" href="#42-feed-forward-network-ffn-sub-layer">#</a></h3>
+<p>This is where the model does much of its &ldquo;thinking&rdquo; and knowledge recall.</p>
+<ul>
+<li>
+<p><strong>Standard FFN</strong>: A simple two-layer MLP: <code>FFN(x) = ReLU(x @ W1 + b1) @ W2 + b2</code>.</p>
+</li>
+<li>
+<p><strong>SwiGLU Variant</strong>: Modern models often use a more advanced variant called SwiGLU (Gated Linear Unit with a Swish/SiLU activation) for better performance.</p>
+<blockquote>
+<p><code>SwiGLU(x) = (SiLU(x @ W1) * (x @ W_gate)) @ W2</code></p></blockquote>
+<ul>
+<li>It uses three weight matrices instead of two. The gating mechanism (<code>x @ W_gate</code>) allows the network to dynamically control how much information flows through the main path, leading to improved training and final model quality.</li>
+</ul>
+</li>
+<li>
+<p><strong>Mixture of Experts (MoE)</strong>: To scale up model size efficiently, the FFN sub-layer can be replaced with an MoE layer.</p>
+<ul>
+<li><strong>Architecture</strong>: Instead of one large FFN, there are multiple smaller FFNs (the &ldquo;experts&rdquo;).</li>
+<li><strong>Routing</strong>: A small &ldquo;gating network&rdquo; or &ldquo;router&rdquo; (a simple linear layer + softmax) looks at each token&rsquo;s hidden state and outputs probabilities for which expert should process it.</li>
+<li><strong>Sparse Activation</strong>: Typically, only the top-2 experts are chosen for each token. The final output is a weighted sum of the outputs from these two experts.</li>
+<li><strong>Benefit</strong>: This allows for a massive increase in the total number of parameters in the model, while the computational cost per token remains constant. A &ldquo;load balancing loss&rdquo; is often added during training to ensure all experts are utilized.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Mixture-of-Experts FFN (per token view)" loading="lazy" src="/img/moe_ffn_per_token.png"></p>
+<ul>
+<li>
+<p><strong>Load Balancing Loss – My Mental Picture</strong></p>
+<p>Mixture-of-Experts only helps if different experts actually get used. In practice, the router tends to fall in love with a few &ldquo;easy win&rdquo; experts early in training and send almost every token to them. Those experts get lots of gradient updates and become even better, while the others starve and never learn anything useful. This is called router collapse.</p>
+<p>To prevent that, modern MoE layers add a small auxiliary <strong>load balancing loss</strong>. Over a batch of tokens, we look at two things for each expert:</p>
+<ul>
+<li>how much the router <em>wants</em> to use that expert (its average routing probability), and</li>
+<li>how many tokens actually <em>go</em> to that expert (its share of the routed tokens).</li>
+</ul>
+<p>The load balancing loss pushes these quantities toward being roughly <strong>uniform across experts</strong>. Intuitively, it penalizes solutions where one expert is overloaded and others are idle. The main language modeling loss still decides <em>what</em> each expert should learn, but the load balancing loss makes sure every expert gets a steady stream of training data instead of the router sending everything to a single &ldquo;favorite&rdquo; expert.</p>
+</li>
+</ul>
+<h3 id="43-residual-connections">4.3. Residual Connections<a hidden class="anchor" aria-hidden="true" href="#43-residual-connections">#</a></h3>
+<p>Residual connections (or &ldquo;skip connections&rdquo;) are the architectural glue that holds the transformer block together and, more importantly, allows the model to be trained at great depths.</p>
+<ul>
+<li>
+<p><strong>How it Works</strong>: A residual connection is a direct data path that bypasses a sub-layer (like attention or FFN). The output of the sub-layer is then <em>added</em> to the original input that went into it.</p>
+<blockquote>
+<p><code>output = input + SubLayer(LayerNorm(input))</code></p></blockquote>
+</li>
+<li>
+<p><strong>Why They Are Critical</strong>:</p>
+<ol>
+<li><strong>Combating Vanishing Gradients</strong>: This is the primary reason for their existence. In very deep networks, gradients can shrink exponentially as they are propagated backward from the final layer to the initial layers. This causes the early layers to learn extremely slowly or not at all. The residual connection acts as an &ldquo;information superhighway,&rdquo; allowing the gradient to flow directly and unimpeded back through the network. This ensures that even the earliest layers receive a strong learning signal.</li>
+<li><strong>Preserving Information</strong>: Each sub-layer transforms its input. The residual connection guarantees that the original, untransformed information from the beginning of the block is carried forward. The sub-layer&rsquo;s job is simplified: it only needs to learn the <em>residual</em>—the change or update that should be applied to the original vector—rather than the entire transformation from scratch. This makes learning easier and prevents information loss.</li>
+</ol>
+</li>
+</ul>
+<p>Without residual connections, training transformers with dozens or hundreds of layers would be practically impossible.</p>
+<h2 id="5-key-value-kv-cache">5. Key-Value (KV) Cache<a hidden class="anchor" aria-hidden="true" href="#5-key-value-kv-cache">#</a></h2>
+<p>A critical optimization that makes auto-regressive text generation practical and fast.</p>
+<ul>
+<li><strong>The Problem</strong>: During generation, to predict token <code>N+1</code>, the model needs to attend to all previous tokens <code>1...N</code>. Naively re-calculating the Key (K) and Value (V) vectors for the entire context at every single step is computationally prohibitive.</li>
+<li><strong>The Solution</strong>: The KV cache is a memory buffer that stores the K and V vectors once they are computed.
+<ul>
+<li><strong>Step 1</strong>: Process prompt &ldquo;The cat&rdquo;. Compute and cache <code>K_the</code>, <code>V_the</code>, <code>K_cat</code>, <code>V_cat</code>.</li>
+<li><strong>Step 2</strong>: Generate next token. Let&rsquo;s say it&rsquo;s &ldquo;sat&rdquo;. The model computes <code>Q_sat</code> and attends to the cached <code>[K_the, K_cat]</code> and <code>[V_the, V_cat]</code>.</li>
+<li><strong>Step 3</strong>: After generating &ldquo;sat&rdquo;, compute <code>K_sat</code> and <code>V_sat</code> and <em>append</em> them to the cache. The cache now holds K/V for &ldquo;The cat sat&rdquo;.</li>
+<li><strong>Note</strong>: With Sliding Window Attention, this cache would be a fixed-size rolling buffer rather than an ever-growing list (see section 4.1).</li>
+<li>This turns a quadratic operation (recomputing everything) into a linear one (computing for one new token), making generation feasible for long sequences.</li>
+</ul>
+</li>
+</ul>
+<h2 id="6-overall-architecture--workflow">6. Overall Architecture &amp; Workflow<a hidden class="anchor" aria-hidden="true" href="#6-overall-architecture--workflow">#</a></h2>
+<p>Putting it all together, a GPT-style model processes data roughly like this:</p>
+<ol>
+<li>
+<p><strong>Input</strong><br>
+Raw text is passed to the <strong>tokenizer</strong>, producing a sequence of token IDs.</p>
+</li>
+<li>
+<p><strong>Embedding layer</strong><br>
+Token IDs are converted into <strong>token embeddings</strong>. Positional information (e.g., RoPE) is applied to the Q/K projections inside attention layers.</p>
+</li>
+<li>
+<p><strong>Transformer blocks (stacked L times)</strong><br>
+The sequence is processed through <code>L</code> identical blocks. For each block:</p>
+<p>a. <em>Pre-attention norm</em><br>
+<code>x_norm1 = RMSNorm(x)</code></p>
+<p>b. <em>Attention</em><br>
+<code>attn_out = GQA(Q = x_norm1, K = x_norm1, V = x_norm1)</code><br>
+(with RoPE applied to Q and K, plus any attention bias, SWA masking, sinks, etc.)</p>
+<p>c. <em>First residual</em><br>
+<code>x_res1 = x + attn_out</code></p>
+<p>d. <em>Pre-FFN norm</em><br>
+<code>x_norm2 = RMSNorm(x_res1)</code></p>
+<p>e. <em>Feed-forward / MoE</em><br>
+<code>ffn_out = MoE(x_norm2)</code> (or a SwiGLU FFN in non-MoE models)</p>
+<p>f. <em>Second residual</em><br>
+<code>x = x_res1 + ffn_out</code><br>
+(this <code>x</code> becomes the input to the next block)</p>
+</li>
+<li>
+<p><strong>Final projection</strong></p>
+<p>a. Apply a final RMSNorm to the last block’s output.<br>
+b. Use a linear layer (the LM head) to project to vocabulary size, producing <strong>logits</strong> for each token position.</p>
+</li>
+<li>
+<p><strong>Softmax &amp; loss</strong></p>
+<ul>
+<li>During training, apply softmax to get probabilities and use cross-entropy against the next token as the main loss.</li>
+<li>For MoE layers, add the auxiliary load balancing loss on top.</li>
+</ul>
+</li>
+<li>
+<p><strong>Inference loop &amp; KV cache</strong></p>
+<p>For generation, the model runs step-by-step:</p>
+<ul>
+<li>For each new token, compute Q (and the new K/V), attend to <strong>cached</strong> past keys/values, and append the new K/V to the KV cache.</li>
+<li>With Sliding Window Attention, the KV cache becomes a rolling buffer that only retains the last <code>W</code> tokens (plus any sink positions), keeping memory usage bounded even for long conversations.</li>
+</ul>
+</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/transformers/">Transformers</a></li>
+      <li><a href="http://localhost:1313/tags/deep-learning/">Deep-Learning</a></li>
+      <li><a href="http://localhost:1313/tags/architecture/">Architecture</a></li>
+      <li><a href="http://localhost:1313/tags/gpt/">GPT</a></li>
+      <li><a href="http://localhost:1313/tags/attention/">Attention</a></li>
+      <li><a href="http://localhost:1313/tags/moe/">MoE</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/attention_mechanism/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Attention Mechanisms in Transformers: MHA vs MQA vs GQA</span>
+  </a>
+</nav>
+
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share GPT OSS Style Architectures on x"
+            href="https://x.com/intent/tweet/?text=GPT%20OSS%20Style%20Architectures&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fgpt_oss_architecture%2f&amp;hashtags=transformers%2cdeep-learning%2carchitecture%2cGPT%2cattention%2cMoE">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share GPT OSS Style Architectures on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fgpt_oss_architecture%2f&amp;title=GPT%20OSS%20Style%20Architectures&amp;summary=GPT%20OSS%20Style%20Architectures&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fgpt_oss_architecture%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share GPT OSS Style Architectures on reddit"
+            href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fgpt_oss_architecture%2f&title=GPT%20OSS%20Style%20Architectures">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share GPT OSS Style Architectures on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fgpt_oss_architecture%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share GPT OSS Style Architectures on whatsapp"
+            href="https://api.whatsapp.com/send?text=GPT%20OSS%20Style%20Architectures%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fgpt_oss_architecture%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share GPT OSS Style Architectures on telegram"
+            href="https://telegram.me/share/url?text=GPT%20OSS%20Style%20Architectures&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fgpt_oss_architecture%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share GPT OSS Style Architectures on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=GPT%20OSS%20Style%20Architectures&u=http%3a%2f%2flocalhost%3a1313%2fposts%2fgpt_oss_architecture%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">Rajat Patel</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
