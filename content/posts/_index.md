@@ -16,6 +16,7 @@ This collection covers topics in machine learning, statistics, and software engi
 - **[Reinforcement Learning Foundations: From MDPs to Deep Q-Learning](/posts/reinforcement-learning-foundations/)** - Fundamentals of RL including MDPs, value functions, Q-learning, and Deep Q-Networks with mathematical derivations and implementations
 
 ### Language Modeling
+- **[GPT OSS Style Architectures](/posts/gpt_oss_architecture/)** - Deep-dive into modern open-source GPT-style language models covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA), normalization (RMSNorm), and feed-forward variants (MoE)
 - **[Understanding Tokenizers in NLP](/posts/tokenizers/)** - Overview of tokenization techniques including BPE, WordPiece, and SentencePiece with practical examples
 - **[Attention Mechanisms in Transformers: MHA vs MQA vs GQA](/posts/attention_mechanism/)** - Comparative analysis of Multi-Head, Multi-Query, and Grouped-Query Attention mechanisms with implementation details and performance trade-offs
 

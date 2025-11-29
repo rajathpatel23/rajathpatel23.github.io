@@ -1,11 +1,20 @@
-### GPT OSS Style Architectures
+---
+title: "GPT OSS Style Architectures"
+date: 2025-11-29
+draft: false
+showToc: true
+TocOpen: true
+math: true
+tags: ["transformers", "deep-learning", "architecture", "GPT", "attention", "MoE"]
+categories: ["Technical", "Tutorial"]
+description: "A personal deep-dive into modern open-source GPT-style language models, covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA, attention sinks), normalization (RMSNorm), feed-forward variants (SwiGLU, MoE), and KV caching."
+---
 
-This document provides a breakdown of my understanding of the architecture component found in modern, high-performance, open-source GPT-style language models.
+This document is my personal deep-dive into how modern open-source GPT-style language models are actually built. It's not meant to be a full survey of the literature; instead, it captures the pieces that helped *me* build an intuition for these models: how text becomes vectors, how positional information is injected, how attention is optimized, and how FFN variants like MoE increase capacity without blowing up compute.
 
+---
 
-
-
-### 1. Tokenization & Embeddings
+## 1. Tokenization & Embeddings
 
 The journey from human-readable text to a format the model understands begins here.
 
@@ -26,7 +35,7 @@ The journey from human-readable text to a format the model understands begins he
 
 ---
 
-### 2. Positional Information: Rotary Positional Embeddings (RoPE)
+## 2. Positional Information: Rotary Positional Embeddings (RoPE)
 
 ### 2.1 Why Transformers Need Positional Information
 
@@ -38,15 +47,15 @@ That’s a problem, because in language the order of tokens carries meaning. We 
 
 ### 2.2 Sinusoidal Positional Encodings – Circle and Wavelength Intuition
 
-The original Transformer uses **sinusoidal positional encodings**. The idea is to associate each position index `pos` with an angle \(\theta\), and then use \((\cos \theta, \sin \theta)\) as a 2-D code. You can visualize this as a point moving around a **unit circle**:
+The original Transformer uses **sinusoidal positional encodings**. The idea is to associate each position index `pos` with an angle $\theta$, and then use $(\cos \theta, \sin \theta)$ as a 2-D code. You can visualize this as a point moving around a **unit circle**:
 
-- each position `pos` corresponds to some angle \(\theta(pos)\)
-- the x-coordinate is \(\cos \theta(pos)\)
-- the y-coordinate is \(\sin \theta(pos)\)
+- each position `pos` corresponds to some angle $\theta(\text{pos})$
+- the x-coordinate is $\cos \theta(\text{pos})$
+- the y-coordinate is $\sin \theta(\text{pos})$
 
-Different dimensions of the positional encoding use different “speeds” around this circle, controlled by a **wavelength** \(\lambda\). A smaller \(\lambda\) means that as `pos` increases, \(\theta = pos / \lambda\) grows faster, so the point spins around the circle more quickly (higher frequency). A larger \(\lambda\) means a slower rotation (lower frequency). Across all dimensions you get a mix of high- and low-frequency waves over position.
+Different dimensions of the positional encoding use different "speeds" around this circle, controlled by a **wavelength** $\lambda$. A smaller $\lambda$ means that as `pos` increases, $\theta = \text{pos} / \lambda$ grows faster, so the point spins around the circle more quickly (higher frequency). A larger $\lambda$ means a slower rotation (lower frequency). Across all dimensions you get a mix of high- and low-frequency waves over position.
 
-The key bit is what happens when you move from position `pos` to position `pos + k`. On the circle, that is just a **rotation by a fixed angle** that depends only on `k`. So the code at `pos + k` is the code at `pos` rotated by a fixed amount. Because of this, linear layers can learn to detect **relative offsets** (“how far apart are these two positions?”) just by looking at how their sin/cos coordinates relate. That’s what people mean when they say sinusoidal encodings make it easier for the model to attend by *relative* position, even though we only ever feed in absolute indices.
+The key bit is what happens when you move from position `pos` to position $\text{pos} + k$. On the circle, that is just a **rotation by a fixed angle** that depends only on $k$. So the code at $\text{pos} + k$ is the code at `pos` rotated by a fixed amount. Because of this, linear layers can learn to detect **relative offsets** ("how far apart are these two positions?") just by looking at how their sin/cos coordinates relate. That's what people mean when they say sinusoidal encodings make it easier for the model to attend by *relative* position, even though we only ever feed in absolute indices.
 
 ### 2.3 Rotary Positional Embeddings (RoPE) – What GPT OSS Actually Uses
 
@@ -55,7 +64,7 @@ The key bit is what happens when you move from position `pos` to position `pos +
 **The Core Idea**: Instead of adding positional information to the token embedding, RoPE encodes positional information by **rotating** the Query and Key vectors. The amount of rotation depends on the token's absolute position in the sequence.
 
 - **How It Works: Vector Rotation**
-    1. **Pairing Dimensions**: The `d`dimensional Query and Key vectors are viewed as a sequence of `d/2` two-dimensional vectors. For a vector `v`, this would be `[(v_0, v_1), (v_2, v_3), ..., (v_{d-2}, v_{d-1})]`.
+    1. **Pairing Dimensions**: The `d`-dimensional Query and Key vectors are viewed as a sequence of `d/2` two-dimensional vectors. For a vector `v`, this would be `[(v_0, v_1), (v_2, v_3), ..., (v_{d-2}, v_{d-1})]`.
     2. **Defining Frequencies**: A set of `d/2` different angular frequencies (or "wavelengths") `theta_i` are defined. These are fixed and not learned, typically set to `theta_i = 10000^(-2i/d)`. This means the first pairs rotate slowly (long wavelength) and later pairs rotate quickly (short wavelength).
     3. **Applying Rotation**: For a token at position `m`, each 2D pair `(v_i, v_{i+1})` is rotated by an angle of `m * theta_i`. This is done using a 2D rotation matrix:This operation is applied to both the Query vector `q` and the Key vector `k` before the attention score is calculated.
         
@@ -74,35 +83,39 @@ The key bit is what happens when you move from position `pos` to position `pos +
     3. **Stability**: Rotation is a norm-preserving operation, meaning it doesn't change the length of the vectors, which helps maintain training stability.
 
 
-### 2.4 Comparing different position embedding 
-Feature,Absolute (Traditional),Relative,Rotary (RoPE)
-Method,Add a vector to the token.,Add a bias to the attention score.,Rotate the token vector.
-Analogy,"House Numbers (""House #5"")","Directions (""3 steps left"")","Clocks (""Angle difference"")"
-Generalization,Poor (Struggles with new lengths).,Good (invariant to shift).,Excellent (encodes relative distance naturally).
-Complexity,Low (Simple addition).,High (Pairwise calculation).,Medium (Matrix multiplication).
+### 2.4 Comparing different positional encoding schemes
+
+| Feature         | Absolute (Traditional)                  | Relative                             | Rotary (RoPE)                                  |
+|----------------|-----------------------------------------|--------------------------------------|------------------------------------------------|
+| Method         | Add a vector to the token embedding     | Add a bias to the attention scores   | Rotate the token’s Q/K vectors                 |
+| Analogy        | House numbers (“House #5”)              | Directions (“3 steps left”)          | Clock angles (“angle difference”)              |
+| Generalization | Poor (struggles with unseen lengths)    | Good (invariant to shifts)           | Excellent (naturally encodes relative distance)|
+| Complexity     | Low (simple addition)                   | High (pairwise distance computation) | Medium (rotation via small matrix multiplies)  |
 
 ---
 
-### **3. RMS Normalization (RMSNorm)**
+## 3. RMS Normalization (RMSNorm)
 
 A simple and efficient normalization layer used throughout the transformer blocks to stabilize training.
 
 - **Formula**:
     
-    > output = (x / RMS(x)) * g where RMS(x) = sqrt(mean(x^2) + epsilon)
-    > 
-- `x` is the input vector, `g` (gain) is a learned parameter vector, and `epsilon` is a small constant for numerical stability.
+$$
+\text{output} = \frac{x}{\text{RMS}(x)} \cdot g \quad \text{where} \quad \text{RMS}(x) = \sqrt{\frac{1}{d}\sum_{i=1}^{d} x_i^2 + \epsilon}
+$$
+
+- `x` is the input vector, `g` (gain) is a learned parameter vector, and `epsilon` is a small constant for numerical stability.
 - **Advantages over LayerNorm**:
     - **Simplicity & Speed**: By omitting the mean-centering step of LayerNorm (`x - mean(x)`), RMSNorm is computationally simpler and faster (~7-14% on GPUs).
     - **Equivalent Performance**: In practice, for large transformer models, the centering operation provides little to no benefit, and RMSNorm performs just as well or better. The network can implicitly learn to offset values if needed.
 
 
-### 4. The Transformer Block
+## 4. The Transformer Block
 
 The core repeating unit of the model. A model is a deep stack of these blocks. A single block consists of two main sub-layers: an attention mechanism and a feed-forward network.
 
 
-#### 4.1. Attention Sub-Layer
+### 4.1. Attention Sub-Layer
 
 This layer allows tokens to "look at" and gather information from other tokens in the sequence.
 
@@ -140,17 +153,13 @@ A common question about SWA is: if a token can only see the last `W` tokens, isn
 
 *   **KV Cache Size Impact**: The choice of attention mechanism directly impacts the size of the KV Cache. MQA and GQA reduce the cache size by reducing the number of K/V heads. SWA reduces it by limiting the sequence length dimension of the cache.
 
-*   **Attention Bias**: An optional matrix added to the `Q @ K^T` scores before the softmax. It's a flexible tool for:
-    1.  **Causal Masking**: Setting scores for future tokens to `-infinity` to prevent a token from "cheating" and seeing the future. This is essential for auto-regressive generation.
-    2.  **Positional Biases**: Implementing alternative positional encoding schemes like ALiBi (Attention with Linear Biases), where the bias penalizes attention between distant tokens.
-
-#### 4.1.2. Attention Bias (details)
+#### 4.1.2. Attention Bias
 
 -   **Definition**: The attention logits are computed as `attn_logits = (Q @ K^T) * scale + bias`, where `bias` is added before the softmax and can be broadcast across heads and/or sequence positions.
     -   Typical shapes: `[num_heads, 1, seq_len, seq_len]`, `[1, seq_len, seq_len]`, or block-sparse masks.
 -   **Common uses**:
-    -   **Causal mask**: Upper-triangular entries set to `-inf` to enforce left-to-right decoding.
-    -   **Attention Linear Bias (ALiBi) (linear distance penalty)**: Per-head slopes applied as a negative linear function of token distance; compatible with RoPE and lightweight to implement.
+    -   **Causal Masking**: Setting scores for future tokens to `-infinity` to prevent a token from "cheating" and seeing the future. This is essential for auto-regressive generation.
+    -   **Attention Linear Bias (ALiBi) (linear distance penalty)**: Implementing alternative positional encoding schemes like ALiBi (Attention with Linear Biases), where the bias penalizes attention between distant tokens.
     -   **Relative position bias (T5-style)**: Learned bucketed biases that favor nearby tokens without explicit rotations.
     -   **Segment/turn/document biases**: Down-weight cross-segment attention (e.g., between chat turns) or up-weight separators.
     -   **Task-specific nudges**: Small positive bias to encourage attending to prefixes, BOS, or special control tokens.
@@ -192,7 +201,7 @@ def update_kv_cache(cache, new_k, new_v, sink_indices, window_size):
     return cache
 ```
 
-#### 4.2. Feed-Forward Network (FFN) Sub-Layer
+### 4.2. Feed-Forward Network (FFN) Sub-Layer
 
 This is where the model does much of its "thinking" and knowledge recall.
 
@@ -201,13 +210,13 @@ This is where the model does much of its "thinking" and knowledge recall.
     > `SwiGLU(x) = (SiLU(x @ W1) * (x @ W_gate)) @ W2`
     *   It uses three weight matrices instead of two. The gating mechanism (`x @ W_gate`) allows the network to dynamically control how much information flows through the main path, leading to improved training and final model quality.
 
-
-![Mixture-of-Experts FFN (per token view)](/img/moe_ffn_per_token.png)
 *   **Mixture of Experts (MoE)**: To scale up model size efficiently, the FFN sub-layer can be replaced with an MoE layer.
     *   **Architecture**: Instead of one large FFN, there are multiple smaller FFNs (the "experts").
     *   **Routing**: A small "gating network" or "router" (a simple linear layer + softmax) looks at each token's hidden state and outputs probabilities for which expert should process it.
     *   **Sparse Activation**: Typically, only the top-2 experts are chosen for each token. The final output is a weighted sum of the outputs from these two experts.
     *   **Benefit**: This allows for a massive increase in the total number of parameters in the model, while the computational cost per token remains constant. A "load balancing loss" is often added during training to ensure all experts are utilized.
+
+![Mixture-of-Experts FFN (per token view)](/img/moe_ffn_per_token.png)
 
     
 *  **Load Balancing Loss – My Mental Picture**
@@ -219,10 +228,9 @@ This is where the model does much of its "thinking" and knowledge recall.
     - how much the router *wants* to use that expert (its average routing probability), and  
     - how many tokens actually *go* to that expert (its share of the routed tokens).
 
-    The load balancing loss pushes these quantities toward being roughly **uniform across experts**. Intuitively, it penalizes solutions where one expert is overloaded and others are idle. The main language modeling loss still decides *what* each expert should learn, but the load balancing loss makes sure every expert gets a steady stream of training data instead of the router sending everything to a single “favorite” expert.
- 
+    The load balancing loss pushes these quantities toward being roughly **uniform across experts**. Intuitively, it penalizes solutions where one expert is overloaded and others are idle. The main language modeling loss still decides *what* each expert should learn, but the load balancing loss makes sure every expert gets a steady stream of training data instead of the router sending everything to a single "favorite" expert.
 
-#### 4.3. Residual Connections
+### 4.3. Residual Connections
 
 Residual connections (or "skip connections") are the architectural glue that holds the transformer block together and, more importantly, allows the model to be trained at great depths.
 
@@ -237,7 +245,7 @@ Without residual connections, training transformers with dozens or hundreds of l
 
 
 
-### 5. Key-Value (KV) Cache
+## 5. Key-Value (KV) Cache
 
 A critical optimization that makes auto-regressive text generation practical and fast.
 
@@ -250,21 +258,52 @@ A critical optimization that makes auto-regressive text generation practical and
     *   This turns a quadratic operation (recomputing everything) into a linear one (computing for one new token), making generation feasible for long sequences.
 
 
-### 6. Overall Architecture & Workflow
+## 6. Overall Architecture & Workflow
 
-Putting it all together, the data flows through the model as follows:
+Putting it all together, a GPT-style model processes data roughly like this:
 
-1.  **Input**: Raw text is passed to the **Tokenizer**, producing a sequence of token IDs.
-2.  **Embedding Layer**: The token IDs are converted into **Token Embedding** vectors.
-3.  **Transformer Blocks (Stacked `L` times)**: The vectors are processed sequentially through `L` identical transformer blocks. For each block:
-    a. **Pre-Attention Norm**: `x_norm1 = RMSNorm(x)`
-    b. **Attention**: `attn_out = GQA(Q=x_norm1, K=x_norm1, V=x_norm1)` (with RoPE applied to Q and K internally).
-    c. **First Residual Connection**: `x_res1 = x + attn_out`
-    d. **Pre-FFN Norm**: `x_norm2 = RMSNorm(x_res1)`
-    e. **Feed-Forward Network**: `ffn_out = MoE(x_norm2)` (or a SwiGLU FFN).
-    f. **Second Residual Connection**: `x = x_res1 + ffn_out` (This `x` becomes the input to the next block).
-4.  **Final Projection**:
-    a. After the last block, a final `RMSNorm` is applied to the output.
-    b. A linear layer (the "un-embedding" or "language model head") projects the final high-dimensional vector back to the size of the vocabulary, producing **logits**.
-5.  **Softmax**: The logits are converted into probabilities over the entire vocabulary to predict the most likely next token.
-6.  **Inference Loop**: For generation, this process is repeated, using the **KV Cache** to maintain context and efficiently produce one token at a time.
+1. **Input**  
+   Raw text is passed to the **tokenizer**, producing a sequence of token IDs.
+
+2. **Embedding layer**  
+   Token IDs are converted into **token embeddings**. Positional information (e.g., RoPE) is applied to the Q/K projections inside attention layers.
+
+3. **Transformer blocks (stacked L times)**  
+   The sequence is processed through `L` identical blocks. For each block:
+
+   a. *Pre-attention norm*  
+      `x_norm1 = RMSNorm(x)`
+
+   b. *Attention*  
+      `attn_out = GQA(Q = x_norm1, K = x_norm1, V = x_norm1)`  
+      (with RoPE applied to Q and K, plus any attention bias, SWA masking, sinks, etc.)
+
+   c. *First residual*  
+      `x_res1 = x + attn_out`
+
+   d. *Pre-FFN norm*  
+      `x_norm2 = RMSNorm(x_res1)`
+
+   e. *Feed-forward / MoE*  
+      `ffn_out = MoE(x_norm2)` (or a SwiGLU FFN in non-MoE models)
+
+   f. *Second residual*  
+      `x = x_res1 + ffn_out`  
+      (this `x` becomes the input to the next block)
+
+4. **Final projection**  
+
+   a. Apply a final RMSNorm to the last block’s output.  
+   b. Use a linear layer (the LM head) to project to vocabulary size, producing **logits** for each token position.
+
+5. **Softmax & loss**  
+
+   - During training, apply softmax to get probabilities and use cross-entropy against the next token as the main loss.  
+   - For MoE layers, add the auxiliary load balancing loss on top.
+
+6. **Inference loop & KV cache**  
+
+   For generation, the model runs step-by-step:
+
+   - For each new token, compute Q (and the new K/V), attend to **cached** past keys/values, and append the new K/V to the KV cache.
+   - With Sliding Window Attention, the KV cache becomes a rolling buffer that only retains the last `W` tokens (plus any sink positions), keeping memory usage bounded even for long conversations.

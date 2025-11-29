@@ -16,6 +16,7 @@ Reinforcement Learning Foundations: From MDPs to Deep Q-Learning - Fundamentals 
 
 Language Modeling
 
+GPT OSS Style Architectures - Deep-dive into modern open-source GPT-style language models covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA), normalization (RMSNorm), and feed-forward variants (MoE)
 Understanding Tokenizers in NLP - Overview of tokenization techniques including BPE, WordPiece, and SentencePiece with practical examples
 Attention Mechanisms in Transformers: MHA vs MQA vs GQA - Comparative analysis of Multi-Head, Multi-Query, and Grouped-Query Attention mechanisms with implementation details and performance trade-offs
 
@@ -120,7 +121,7 @@ External articles are published on Medium.">
   <meta property="og:site_name" content="Rajat Patel">
   <meta property="og:title" content="Blog">
   <meta property="og:description" content="Blog Posts This collection covers topics in machine learning, statistics, and software engineering, with a focus on practical applications and theoretical foundations.
-Machine Learning &amp; Deep Learning Reinforcement Learning Reinforcement Learning Foundations: From MDPs to Deep Q-Learning - Fundamentals of RL including MDPs, value functions, Q-learning, and Deep Q-Networks with mathematical derivations and implementations Language Modeling Understanding Tokenizers in NLP - Overview of tokenization techniques including BPE, WordPiece, and SentencePiece with practical examples Attention Mechanisms in Transformers: MHA vs MQA vs GQA - Comparative analysis of Multi-Head, Multi-Query, and Grouped-Query Attention mechanisms with implementation details and performance trade-offs Statistics &amp; Probability Probability Distributions Binomial Random Variable and Distribution - Binomial distributions and their applications Geometric Random Variable and Distribution - Geometric distributions in probability theory Poisson Distribution - Poisson distributions with real-world examples Exponential Distribution - Exponential distributions and their properties Statistical Estimation Maximum Likelihood Estimation - MLE fundamentals and parameter estimation Maximum Likelihood Estimation for Poisson Distribution - MLE applied to Poisson distributions Maximum Likelihood Estimation for Exponential Distribution - MLE techniques for exponential distributions Regression Analysis Linear Regression - Linear regression models and applications Logistic Regression - Classification using logistic regression Product Management ML Product Development Part I: Empowering Product and Program Managers in Crafting AI Products - Building AI products from an engineering perspective Part II: Understanding ML Development Life Cycle - ML development processes and methodologies Part III: Effective Collaboration with ML Engineers and Data Scientists - Cross-functional collaboration in ML teams Part IV: Communicating and Aligning while Developing ML Products - Communication strategies for ML projects External articles are published on Medium.">
+Machine Learning &amp; Deep Learning Reinforcement Learning Reinforcement Learning Foundations: From MDPs to Deep Q-Learning - Fundamentals of RL including MDPs, value functions, Q-learning, and Deep Q-Networks with mathematical derivations and implementations Language Modeling GPT OSS Style Architectures - Deep-dive into modern open-source GPT-style language models covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA), normalization (RMSNorm), and feed-forward variants (MoE) Understanding Tokenizers in NLP - Overview of tokenization techniques including BPE, WordPiece, and SentencePiece with practical examples Attention Mechanisms in Transformers: MHA vs MQA vs GQA - Comparative analysis of Multi-Head, Multi-Query, and Grouped-Query Attention mechanisms with implementation details and performance trade-offs Statistics &amp; Probability Probability Distributions Binomial Random Variable and Distribution - Binomial distributions and their applications Geometric Random Variable and Distribution - Geometric distributions in probability theory Poisson Distribution - Poisson distributions with real-world examples Exponential Distribution - Exponential distributions and their properties Statistical Estimation Maximum Likelihood Estimation - MLE fundamentals and parameter estimation Maximum Likelihood Estimation for Poisson Distribution - MLE applied to Poisson distributions Maximum Likelihood Estimation for Exponential Distribution - MLE techniques for exponential distributions Regression Analysis Linear Regression - Linear regression models and applications Logistic Regression - Classification using logistic regression Product Management ML Product Development Part I: Empowering Product and Program Managers in Crafting AI Products - Building AI products from an engineering perspective Part II: Understanding ML Development Life Cycle - ML development processes and methodologies Part III: Effective Collaboration with ML Engineers and Data Scientists - Cross-functional collaboration in ML teams Part IV: Communicating and Aligning while Developing ML Products - Communication strategies for ML projects External articles are published on Medium.">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
@@ -235,6 +236,7 @@ Machine Learning &amp; Deep Learning Reinforcement Learning Reinforcement Learni
 </ul>
 <h3 id="language-modeling">Language Modeling<a hidden class="anchor" aria-hidden="true" href="#language-modeling">#</a></h3>
 <ul>
+<li><strong><a href="/posts/gpt_oss_architecture/">GPT OSS Style Architectures</a></strong> - Deep-dive into modern open-source GPT-style language models covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA), normalization (RMSNorm), and feed-forward variants (MoE)</li>
 <li><strong><a href="/posts/tokenizers/">Understanding Tokenizers in NLP</a></strong> - Overview of tokenization techniques including BPE, WordPiece, and SentencePiece with practical examples</li>
 <li><strong><a href="/posts/attention_mechanism/">Attention Mechanisms in Transformers: MHA vs MQA vs GQA</a></strong> - Comparative analysis of Multi-Head, Multi-Query, and Grouped-Query Attention mechanisms with implementation details and performance trade-offs</li>
 </ul>
@@ -270,6 +272,20 @@ Machine Learning &amp; Deep Learning Reinforcement Learning Reinforcement Learni
 
 
 </div>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">GPT OSS Style Architectures
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>This document is my personal deep-dive into how modern open-source GPT-style language models are actually built. It’s not meant to be a full survey of the literature; instead, it captures the pieces that helped me build an intuition for these models: how text becomes vectors, how positional information is injected, how attention is optimized, and how FFN variants like MoE increase capacity without blowing up compute.
+1. Tokenization &amp; Embeddings The journey from human-readable text to a format the model understands begins here.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-11-29 00:00:00 +0000 UTC'>November 29, 2025</span>&nbsp;·&nbsp;16 min&nbsp;·&nbsp;3309 words</footer>
+  <a class="entry-link" aria-label="post link to GPT OSS Style Architectures" href="http://localhost:1313/posts/gpt_oss_architecture/"></a>
+</article>
 
 <article class="post-entry"> 
   <header class="entry-header">
