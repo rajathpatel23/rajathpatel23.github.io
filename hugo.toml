@@ -2,7 +2,7 @@
 # Last updated: 2025-08-15
 
 baseURL = "https://rajathpatel23.github.io/"
-languageCode = "en-us"
+locale = "en-us"
 title = "Rajat Patel"
 theme = "PaperMod"
 
@@ -86,6 +86,10 @@ enableRobotsTXT = true
   name = "email"
   url = "mailto:rpatel12@umbc.edu"
 
+[params.author]
+  name = "Rajat Patel"
+  email = "rpatel12@umbc.edu"
+
 [params.fuseOpts]
   isCaseSensitive = false
   shouldSort = true
@@ -126,7 +130,7 @@ enableRobotsTXT = true
     disabled = false
     simple = true
 
-  [privacy.twitter]
+  [privacy.x]
     disabled = false
     enableDNT = true
     simple = true
