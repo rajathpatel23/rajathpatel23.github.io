@@ -115,14 +115,17 @@ TocOpen: false
 }
 
 .card-link-primary {
-  background: #111827;
+  background: #24292f;
   color: #ffffff;
+  border: 1px solid #1b1f24;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .card-link-primary:hover {
-  background: #1f2937;
+  background: #32383e;
   color: #ffffff;
   text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .card-link-secondary {
