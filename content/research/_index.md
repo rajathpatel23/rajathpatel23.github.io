@@ -6,24 +6,36 @@ showToc: true
 TocOpen: true
 ---
 
-## Research Interests
+I am interested in building AI systems that are useful, adaptive, and reliable in real-world settings.
 
-My current focus is post-training and agentic AI systems.
+My current focus is on post-training, reward modeling, reinforcement learning, and agentic AI systems. I am especially interested in how learning from feedback, preferences, and verifiable outcomes can make models more steerable and effective after pretraining.
 
-**Post-training** — RLHF, preference optimization (DPO, GRPO), and reward modeling. Particularly interested in process reward models (PRMs) that score intermediate reasoning steps, and in what principled stopping criteria look like for agent loops.
+Previously, my work has spanned natural language processing, information extraction, knowledge representation, fraud detection, and production machine learning systems. I care about both the modeling side and the systems side: how models are trained, evaluated, deployed, monitored, and improved in practice.
 
-**Agentic systems** — how structure around a model can substitute for retraining: explicit evidence states, step-level evaluators, planners that use signals deliberately. This connects naturally to agent safety — building systems where the model provides capability but the architecture enforces constraints.
+## Current Interests
 
-**Industry** — production ML in fintech since 2021: fraud detection, transaction risk modeling, and LLM-powered decisioning pipelines.
+- Post-training and reinforcement learning for language models
+- Reward modeling and preference learning
+- AI agents and autonomous workflows
+- Evaluation of LLM behavior and reliability
+- Applied ML systems for high-stakes domains
 
-**Earlier** — NLP and representation learning: knowledge graph embedding, fine-grain entity typing, and joint structured/unstructured language modeling.
+## Selected Work
 
-## Publications
+**Preference Learning for Fraud Detection** — Exploring how reward modeling and preference-based learning can improve fraud decisioning systems beyond static supervised learning.
 
-### Published Papers
+**Process Reward Models for AI Research Agents** — Studying how intermediate reasoning steps can be evaluated to improve agent behavior, not just final outputs.
+
+**NLP and Knowledge Representation** — Prior research on entity typing, knowledge graph embeddings, and language models for structured semantic understanding.
+
+## Published Work
 
 - **Rajat Patel**. (2023). [*InterosML @ Causal News Corpus 2023: Understanding Causal Relationships: Supervised Contrastive Learning for Event Classification*](https://aclanthology.org/2023.case-1.8.pdf)
 
 - **Rajat Patel**, Francis Ferraro. (2020). [*On the Complementary Nature of Knowledge Graph Embedding, Fine Grain Entity Types, and Language Modeling*](https://www.aclweb.org/anthology/2020.deelio-1.11/)
 
-- **Rajat Patel**. (2020). [*Jointly Learning Knowledge Graph Embeddings, Fine Grain Entity Types and Language Models*](http://search.proquest.com/openview/64825ad7bd3b067c01f47fb5c14b3c18/1?pq-origsite=gscholar&cbl=18750&diss=y) (Master thesis) 
+- **Rajat Patel**. (2020). [*Jointly Learning Knowledge Graph Embeddings, Fine Grain Entity Types and Language Models*](http://search.proquest.com/openview/64825ad7bd3b067c01f47fb5c14b3c18/1?pq-origsite=gscholar&cbl=18750&diss=y) (Master thesis)
+
+## Writing
+
+I write about reinforcement learning, post-training, LLM systems, and applied machine learning. [Blog →](/posts/)
