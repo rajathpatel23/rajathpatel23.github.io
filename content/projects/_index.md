@@ -283,6 +283,7 @@ TocOpen: false
     </div>
     <div class="card-links">
       <a href="https://github.com/rajathpatel23/emergency-guidance-agent" class="card-link card-link-primary">GitHub</a>
+      <a href="https://youtu.be/DzXzaUUJiMg" class="card-link card-link-secondary">Demo Video</a>
     </div>
   </div>
 </div>
