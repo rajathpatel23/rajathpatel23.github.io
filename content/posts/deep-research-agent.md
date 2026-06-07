@@ -4,7 +4,7 @@ date: 2026-06-07
 draft: false
 showToc: true
 TocOpen: false
-tags: ["process-reward-models", "research-agents", "agentic-ai", "post-training", "grpo"]
+tags: ["process-reward-models", "research-agents", "agentic-ai", "post-training", "GRPO"]
 categories: ["Technical", "Research"]
 description: "How I built visibility into the research process itself — an explicit evidence state, step-level reward signals, and a planner that uses those signals deliberately. Without retraining."
 ---
