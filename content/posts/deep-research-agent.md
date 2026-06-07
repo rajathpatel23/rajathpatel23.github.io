@@ -205,6 +205,8 @@ The honest gaps:
 
 ---
 
+## The takeaway
+
 The core insight from building this: you don't need to retrain a model to build a research agent that knows what it knows. You need the right architecture around it — an explicit evidence state, step-level signals that classify what each action contributed, and a planner that uses those signals deliberately.
 
 The models are capable. The question is whether the structure around them is. That's an architecture problem, and it's one you can solve today with the compute you have.
@@ -212,5 +214,3 @@ The models are capable. The question is whether the structure around them is. Th
 The path from here runs through trained PRMs and GRPO-trained orchestrators — but the foundation is the design, not the scale.
 
 Full design docs, experiment configs, and ablation results: [deep-research-agent](https://github.com/rajathpatel23/deep-research-agent)
-
-*Tags: process-reward-models, agentic-ai, research-agents, post-training, grpo*
