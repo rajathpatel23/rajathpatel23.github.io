@@ -15,6 +15,9 @@ This collection covers topics in machine learning, statistics, and software engi
 ### Reinforcement Learning
 - **[Reinforcement Learning Foundations: From MDPs to Deep Q-Learning](/posts/reinforcement-learning-foundations/)** - Fundamentals of RL including MDPs, value functions, Q-learning, and Deep Q-Networks with mathematical derivations and implementations
 
+### Post-Training & Research Agents
+- **[Evidence-Driven Deep Research Agent](/posts/deep-research-agent/)** - How I built visibility into the research process itself — an explicit evidence state, step-level reward signals, and a planner that uses those signals deliberately. Includes ablation results comparing guided vs baseline planners and the connection to PRMs and GRPO.
+
 ### Language Modeling
 - **[GPT OSS Style Architectures](/posts/gpt_oss_architecture/)** - Deep-dive into modern open-source GPT-style language models covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA), normalization (RMSNorm), and feed-forward variants (MoE)
 - **[Understanding Tokenizers in NLP](/posts/tokenizers/)** - Overview of tokenization techniques including BPE, WordPiece, and SentencePiece with practical examples
