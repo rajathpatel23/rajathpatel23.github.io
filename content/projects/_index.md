@@ -7,6 +7,11 @@ TocOpen: false
 ---
 
 <style>
+/* ---- Break out of theme's 720px max-width ---- */
+.main {
+  max-width: 1100px !important;
+}
+
 /* ---- Featured cards (horizontal) ---- */
 .featured-list {
   display: flex;
@@ -32,10 +37,11 @@ TocOpen: false
 
 .featured-img {
   flex-shrink: 0;
-  width: 260px;
-  height: 200px;
-  object-fit: cover;
+  width: 300px;
+  height: 220px;
+  object-fit: contain;
   background: #f9fafb;
+  padding: 12px;
   align-self: stretch;
 }
 
@@ -95,11 +101,13 @@ TocOpen: false
 
 .compact-img {
   width: 100%;
-  height: 110px;
-  object-fit: cover;
+  height: 130px;
+  object-fit: contain;
   display: block;
   border-bottom: 1px solid #f3f4f6;
   background: #f9fafb;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .compact-body {
@@ -195,7 +203,7 @@ TocOpen: false
 /* ---- Responsive ---- */
 @media (max-width: 780px) {
   .featured-card { flex-direction: column; }
-  .featured-img { width: 100%; height: 180px; }
+  .featured-img { width: 100%; height: 200px; padding: 16px; }
   .featured-body { padding: 16px; }
   .compact-grid { grid-template-columns: repeat(2, 1fr); }
 }
