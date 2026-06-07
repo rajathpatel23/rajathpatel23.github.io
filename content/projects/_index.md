@@ -2,188 +2,369 @@
 title: "Projects"
 date: 2025-01-27
 draft: false
-showToc: true
-TocOpen: true
+showToc: false
+TocOpen: false
 ---
 
-## 🚀 Projects
-
 <style>
-.project-card {
+/* ---- Break out of theme's 720px max-width ---- */
+.main {
+  max-width: 1100px !important;
+}
+
+/* ---- Featured cards (horizontal) ---- */
+.featured-list {
   display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.featured-card {
+  display: flex;
+  gap: 28px;
   align-items: flex-start;
-  gap: 30px;
-  margin-bottom: 50px;
-  padding: 25px;
-  border: 2px solid #e5e7eb;
-  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
   background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
 }
 
-.project-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+.featured-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.09);
 }
 
-.project-image {
+.featured-img {
   flex-shrink: 0;
-  width: 280px;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-  border: 3px solid #f3f4f6;
-  transition: transform 0.3s ease;
+  width: 300px;
+  height: 220px;
+  object-fit: contain;
+  background: #f9fafb;
+  padding: 12px;
+  align-self: stretch;
 }
 
-.project-image:hover {
-  transform: scale(1.05);
-}
-
-.project-content {
+.featured-body {
   flex: 1;
+  padding: 22px 24px 22px 0;
   min-width: 0;
 }
 
-.project-title {
-  margin: 0 0 15px 0;
-  color: #1f2937;
-  font-size: 1.4em;
+.featured-title {
+  font-size: 1.05em;
   font-weight: 700;
-  line-height: 1.3;
+  color: #111827;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
 }
 
-.project-description {
-  margin-bottom: 20px;
-  line-height: 1.7;
+.featured-desc {
+  font-size: 0.91em;
   color: #374151;
-  font-size: 1.05em;
+  line-height: 1.7;
+  margin: 0 0 14px 0;
 }
 
-.project-link {
-  display: inline-block;
-  padding: 12px 24px;
-  background: #2563eb;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1.05em;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.project-link:hover {
-  background: #1d4ed8;
-  color: white;
-  text-decoration: none;
-  transform: translateY(-1px);
-}
-
-.achievement {
-  background: #dcfce7;
-  color: #166534;
-  padding: 8px 16px;
-  border-radius: 25px;
-  font-size: 0.95em;
+/* ---- Section divider ---- */
+.section-label {
+  font-size: 0.72em;
   font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin: 44px 0 18px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* ---- Compact grid (older work) ---- */
+.compact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.compact-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.15s ease;
+}
+
+.compact-card:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.compact-img {
+  width: 100%;
+  height: 130px;
+  object-fit: contain;
+  display: block;
+  border-bottom: 1px solid #f3f4f6;
+  background: #f9fafb;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.compact-body {
+  padding: 13px 14px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.compact-title {
+  font-size: 0.87em;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+  flex: 1;
+}
+
+/* ---- Tags ---- */
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 13px;
+}
+
+.tag {
+  font-size: 0.67em;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+/* ---- Badges ---- */
+.badge {
   display: inline-block;
-  margin: 0 0 15px 0;
-  border: 2px solid #86efac;
+  font-size: 0.7em;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #dcfce7;
+  color: #15803d;
+  margin-bottom: 8px;
 }
 
-@media (max-width: 968px) {
-  .project-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .project-image {
-    width: 100%;
-    max-width: 400px;
-    height: 250px;
-    margin: 0 auto 20px auto;
-  }
-  
-  .project-title {
-    font-size: 1.25em;
-  }
+/* ---- Buttons ---- */
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 640px) {
-  .project-image {
-    height: 200px;
-  }
+.btn {
+  font-size: 0.82em;
+  font-weight: 600;
+  padding: 7px 15px;
+  border-radius: 7px;
+  text-decoration: none !important;
+  display: inline-block;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-github {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border: 1px solid #1d4ed8;
+}
+
+.btn-github:hover {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+}
+
+.btn-demo {
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-demo:hover {
+  background: #e5e7eb !important;
+  color: #111827 !important;
+}
+
+.btn-sm {
+  font-size: 0.78em;
+  padding: 5px 12px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 780px) {
+  .featured-card { flex-direction: column; }
+  .featured-img { width: 100%; height: 200px; padding: 16px; }
+  .featured-body { padding: 16px; }
+  .compact-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .compact-grid { grid-template-columns: 1fr; }
 }
 </style>
 
-<div class="project-card">
-  <img src="/img/project_images/introduction_slide.png" alt="Knowledge Graph Embedding" class="project-image">
-  <div class="project-content">
-    <h3 class="project-title">Joint Knowledge Graph Embedding, Fine Grain Entity Type and Language Modeling</h3>
-    <p class="project-description">
-      We demonstrate the complementary natures of neural knowledge graph embedding, finegrain entity type prediction, and neural language modeling. We show that a language model-inspired knowledge graph embedding approach yields both improved knowledge graph embeddings and fine-grain entity type representations. Our work also shows that jointly modeling both structured knowledge tuples and language improves both.
-    </p>
-    <a href="https://github.com/rajathpatel23/joint-kge-fnet-lm" class="project-link">📚 View on GitHub</a>
+<div class="featured-list">
+
+<div class="featured-card">
+  <img src="/img/deep-research-agent/architecture.png" alt="Evidence-Driven Deep Research Agent architecture" class="featured-img">
+  <div class="featured-body">
+    <h3 class="featured-title">Evidence-Driven Deep Research Agent</h3>
+    <p class="featured-desc">Research agent with an explicit evidence state, step-level reward signals, and a guided planner that uses those signals to decide what to search next. Runs an adversarial decomposer to generate counter-evidence sub-questions, a multi-stage retrieval pipeline with claim extraction and conflict detection, and a principled stopping criterion. Ablation across two queries: same compute envelope as baseline, full sub-question coverage vs. partial.</p>
+    <div class="tag-row">
+      <span class="tag">Agentic AI</span>
+      <span class="tag">Process Rewards</span>
+      <span class="tag">Python</span>
+      <span class="tag">Tavily</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/deep-research-agent" class="btn btn-github">GitHub</a>
+      <a href="/posts/deep-research-agent/" class="btn btn-demo">Blog Post</a>
+      <a href="https://docs.google.com/presentation/d/1fvA7seMDwqYb8J7eA8dHo8XVrNGJ44QwNsy5Rz2wyi4/edit?usp=sharing" class="btn btn-demo">Slides</a>
+    </div>
   </div>
 </div>
 
-<div class="project-card">
-  <img src="/img/project_images/CausalEventClassification.png" alt="Causal Event Classification" class="project-image">
-  <div class="project-content">
-    <h3 class="project-title">Understanding Causal Relationships: Supervised Contrastive Learning for Event Classification</h3>
-    <div class="achievement">🏆 2nd Position - F1-Score: 84.36</div>
-    <p class="project-description">
-      Causal events play a crucial role in explaining the intricate relationships between the causes and effects of events. We propose a contrastive learning-based method for the Causal News Corpus - Event Causality Shared Task 2023, focusing on Subtask 1 centered on causal event classification. Our approach pre-trains the base model using Supervised Contrastive (SuperCon) learning, then fine-tunes for causal event classification.
-    </p>
-    <a href="https://github.com/rajathpatel23/causal-events" class="project-link">🔗 View on GitHub</a>
+<div class="featured-card">
+  <img src="/img/project_images/labpilot_demo.jpg" alt="LabPilot demo" class="featured-img">
+  <div class="featured-body">
+    <h3 class="featured-title">LabPilot — AI Copilot for R&D Experiment Optimization</h3>
+    <p class="featured-desc">Decision-support loop for R&D labs: surrogate model trained on historical experiment data recommends the next best experiment, with uncertainty quantification and adaptive bandit policies (UCB, LinUCB, greedy). An LLM reasoning layer explains each recommendation; a literature search layer adds source-backed justification. Full session loop — submit observed result, model adapts and recommends next step.</p>
+    <div class="tag-row">
+      <span class="tag">Bandit Policies</span>
+      <span class="tag">Surrogate Modeling</span>
+      <span class="tag">FastAPI</span>
+      <span class="tag">React</span>
+      <span class="tag">Nebius LLM</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/LabPilot" class="btn btn-github">GitHub</a>
+      <a href="https://www.youtube.com/watch?v=7IyL28gGeqM" class="btn btn-demo">Demo Video</a>
+    </div>
   </div>
 </div>
 
-<div class="project-card">
-  <img src="/img/project_images/Know_rep.png" alt="Image Recognition with Knowledge Graph" class="project-image">
-  <div class="project-content">
-    <h3 class="project-title">Combining Image Recognition with Knowledge Graph Embedding for Learning Semantic Attribute of Images</h3>
-    <p class="project-description">
-      Linking entities in the knowledge graph has been an important problem. Learning of images in the open world using language model has attracted lots of interest over the year. Through this paper, we propose a joint learning model to learn images along with image captioned entity attribute representation to learn the semantic relationships from the knowledge graph embedding model. The target model premises to help us understand the semantic relationship between the attribute entities and implicitly provide a link prediction for these entities.
-    </p>
-    <a href="https://github.com/rajathpatel23/object_recog_KGE" class="project-link">🖼️ View on GitHub</a>
+<div class="featured-card">
+  <img src="/img/project_images/emergency-agent.svg" alt="Emergency Guidance Agent FSM" class="featured-img" style="background:#f9fafb;">
+  <div class="featured-body">
+    <h3 class="featured-title">Emergency Guidance Agent — CPR Copilot</h3>
+    <p class="featured-desc">Voice-and-video CPR coaching assistant using browser camera and microphone, built on Google Gemini Live. The core design decision: a strict finite state machine controls step transitions across six states (intake → escalation → see_patient → start_compressions → continue_cpr → complete). The model provides real-time guidance within each state; the application enforces the safety sequence. The model cannot advance or skip steps.</p>
+    <div class="tag-row">
+      <span class="tag">Multimodal</span>
+      <span class="tag">Gemini Live</span>
+      <span class="tag">FSM Safety Design</span>
+      <span class="tag">TypeScript</span>
+      <span class="tag">Pipecat</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/emergency-guidance-agent" class="btn btn-github">GitHub</a>
+      <a href="https://youtu.be/DzXzaUUJiMg" class="btn btn-demo">Demo Video</a>
+    </div>
   </div>
 </div>
 
-<div class="project-card">
-  <img src="/img/project_images/HMM.jpg" alt="Hidden Markov Models" class="project-image">
-  <div class="project-content">
-    <h3 class="project-title">Hidden Markov Models Implementation</h3>
-    <p class="project-description">
-      Python implementation of Hidden Markov Models (HMM). The implementation provides source code for forward-backward algorithm and viterbi algorithm for part of speech tagging problem using HMM. This project demonstrates the practical application of probabilistic models in natural language processing tasks.
-    </p>
-    <a href="https://github.com/rajathpatel23/hmm-implementation" class="project-link">⚡ View on GitHub</a>
-  </div>
-</div> 
+</div>
 
-<div class="project-card">
-  <img src="/img/project_images/mixed_norms_new.png" alt="FISTA, ADMM implementation" class="project-image">
-  <div class="project-content">
-    <h3 class="project-title">FISTA, ADMM implementation</h3>
-    <p class="project-description">
-      The project provides python
-      implementation of optimization algorithms like FISTA, ADMM and mixed norms.
-    </p>
-    <a href="hhttps://github.com/shimingyoung/mtl" class="project-link">⚡ View on GitHub</a>
-  </div>
-</div> 
+<div class="section-label">Earlier Work</div>
 
-<div class="project-card">
-  <!-- <img src="img/project_images/Kafka_twitter_new.png" alt="Streaming Tweets with Kafka<" class="project-image"> -->
-  <div class="project-content">
-    <h3 class="project-title">Streaming Tweets with Kafka</h3>
-    <p class="project-description">
-      This project gives understanding of the streaming capability with Kafka for extracting tweets from twitter.
-      The Kafka streaming service can be used to build pipelines to analyzing the tweets in real time with a ML models.
-    </p>
-    <a href="https://github.com/rajathpatel23/kafka-stream-tweets" class="project-link">⚡ View on GitHub</a>
+<div class="compact-grid">
+
+<div class="compact-card">
+  <img src="/img/project_images/introduction_slide.png" alt="Knowledge Graph Embedding" class="compact-img">
+  <div class="compact-body">
+    <h3 class="compact-title">Joint Knowledge Graph Embedding, Entity Typing, and Language Modeling</h3>
+    <div class="tag-row">
+      <span class="tag">NLP</span>
+      <span class="tag">Knowledge Graphs</span>
+      <span class="tag">Representation Learning</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/joint-kge-fnet-lm" class="btn btn-github btn-sm">GitHub</a>
+    </div>
   </div>
-</div> 
+</div>
+
+<div class="compact-card">
+  <img src="/img/project_images/CausalEventClassification.png" alt="Causal Event Classification" class="compact-img">
+  <div class="compact-body">
+    <div class="badge">2nd Place — F1: 84.36</div>
+    <h3 class="compact-title">Supervised Contrastive Learning for Causal Event Classification</h3>
+    <div class="tag-row">
+      <span class="tag">Contrastive Learning</span>
+      <span class="tag">NLP</span>
+      <span class="tag">Shared Task</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/causal-events" class="btn btn-github btn-sm">GitHub</a>
+    </div>
+  </div>
+</div>
+
+<div class="compact-card">
+  <img src="/img/project_images/Know_rep.png" alt="Image Recognition with Knowledge Graph" class="compact-img">
+  <div class="compact-body">
+    <h3 class="compact-title">Image Recognition with Knowledge Graph Embedding</h3>
+    <div class="tag-row">
+      <span class="tag">Vision</span>
+      <span class="tag">Knowledge Graphs</span>
+      <span class="tag">Joint Learning</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/object_recog_KGE" class="btn btn-github btn-sm">GitHub</a>
+    </div>
+  </div>
+</div>
+
+<div class="compact-card">
+  <img src="/img/project_images/HMM.jpg" alt="Hidden Markov Models" class="compact-img">
+  <div class="compact-body">
+    <h3 class="compact-title">Hidden Markov Models — Forward-Backward and Viterbi</h3>
+    <div class="tag-row">
+      <span class="tag">Probabilistic Models</span>
+      <span class="tag">NLP</span>
+      <span class="tag">Python</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/hmm-implementation" class="btn btn-github btn-sm">GitHub</a>
+    </div>
+  </div>
+</div>
+
+<div class="compact-card">
+  <img src="/img/project_images/mixed_norms_new.png" alt="FISTA ADMM" class="compact-img">
+  <div class="compact-body">
+    <h3 class="compact-title">FISTA, ADMM, and Mixed Norms</h3>
+    <div class="tag-row">
+      <span class="tag">Optimization</span>
+      <span class="tag">Python</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/shimingyoung/mtl" class="btn btn-github btn-sm">GitHub</a>
+    </div>
+  </div>
+</div>
+
+<div class="compact-card">
+  <div class="compact-body" style="padding-top: 18px;">
+    <h3 class="compact-title">Streaming Tweets with Kafka</h3>
+    <div class="tag-row">
+      <span class="tag">Kafka</span>
+      <span class="tag">Streaming</span>
+      <span class="tag">Python</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/kafka-stream-tweets" class="btn btn-github btn-sm">GitHub</a>
+    </div>
+  </div>
+</div>
+
+</div>
