@@ -6,13 +6,19 @@ showToc: true
 TocOpen: true
 ---
 
-## 🔬 Research Interests
+## Research Interests
 
-My current research interests are into extracting knowledge like events, entities and factual legitimacy from unstructured text. I am also interested in using external factual knowledge and constraints (entity types/domain-knowledge/language/sentiment) in improving downstream natural language processing (NLP) application like language modeling (LM), question answering (QA), summarization (SM).
+My current focus is on post-training methods and agentic AI systems.
 
-My work at the Department of Computer Science and Electrical Engineering at the University of Maryland Baltimore County (UMBC) was at the intersection information extraction and representation learning. My work specifically focused on learning information extraction tasks like knowledge graph embedding, entity typing with language modeling principles. The work provides broader understanding in using the knowledge from these tasks to improve generative capacity of downstream NLP tasks like LM, QA etc.
+On the post-training side, I work on reinforcement learning from human feedback (RLHF), preference optimization (DPO, GRPO), and reward modeling — with particular interest in process reward models (PRMs) that score intermediate reasoning steps rather than just final outputs. The core question I keep returning to: how do you build systems that know what they know, and stop when the work is genuinely done rather than when the budget runs out?
 
-## 📚 Publications
+On the agentic side, I am interested in how structure and reward signals around a model can substitute for retraining — explicit evidence states, step-level evaluators, and planners that use those signals deliberately. This leads naturally to questions about agent safety and reliability: how do you build systems where the model provides capability but the architecture enforces constraints?
+
+My industry work is in applied ML at scale: fraud detection, transaction risk modeling, and policy-based approaches to continuous model improvement. I have been building production ML systems in fintech since 2021 — classification models, behavioral features, and increasingly LLM-powered decisioning pipelines.
+
+Earlier research, at the intersection of NLP and representation learning, focused on knowledge graph embedding, fine-grain entity typing, and language modeling — specifically how structured knowledge and unstructured language can be learned jointly to improve downstream tasks.
+
+## Publications
 
 ### Published Papers
 
