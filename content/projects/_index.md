@@ -229,6 +229,7 @@ TocOpen: false
     <div class="btn-row">
       <a href="https://github.com/rajathpatel23/deep-research-agent" class="btn btn-github">GitHub</a>
       <a href="/posts/deep-research-agent/" class="btn btn-demo">Blog Post</a>
+      <a href="https://docs.google.com/presentation/d/1fvA7seMDwqYb8J7eA8dHo8XVrNGJ44QwNsy5Rz2wyi4/edit?usp=sharing" class="btn btn-demo">Slides</a>
     </div>
   </div>
 </div>
