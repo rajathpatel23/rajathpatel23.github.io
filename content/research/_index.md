@@ -6,6 +6,10 @@ showToc: true
 TocOpen: true
 ---
 
+<style>
+.post-content h2 { font-size: 1.1em; margin-top: 2em; }
+</style>
+
 I am interested in building AI systems that are useful, adaptive, and reliable in real-world settings.
 
 My current focus is on post-training, reward modeling, reinforcement learning, and agentic AI systems. I am especially interested in how learning from feedback, preferences, and verifiable outcomes can make models more steerable and effective after pretraining.
@@ -19,14 +23,6 @@ Previously, my work has spanned natural language processing, information extract
 - AI agents and autonomous workflows
 - Evaluation of LLM behavior and reliability
 - Applied ML systems for high-stakes domains
-
-## Selected Work
-
-**Preference Learning for Fraud Detection** — Exploring how reward modeling and preference-based learning can improve fraud decisioning systems beyond static supervised learning.
-
-**Process Reward Models for AI Research Agents** — Studying how intermediate reasoning steps can be evaluated to improve agent behavior, not just final outputs.
-
-**NLP and Knowledge Representation** — Prior research on entity typing, knowledge graph embeddings, and language models for structured semantic understanding.
 
 ## Published Work
 
