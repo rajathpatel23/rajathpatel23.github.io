@@ -1,5 +1,5 @@
 ---
-title: "My Learnings from Building a Deep Research Agent"
+title: "Evidence-Driven Deep Research Agent"
 date: 2026-06-07
 draft: false
 showToc: true
