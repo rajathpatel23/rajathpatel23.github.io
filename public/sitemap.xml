@@ -2,137 +2,192 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/tags/architecture/</loc>
+    <loc>https://rajathpatel23.github.io/tags/agents/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/categories/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/llm/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/machine-learning/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/reinforcement-learning/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/posts/small-ml-subproblems-inside-agents/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/systems/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/categories/technical/</loc>
+    <lastmod>2026-06-22T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/agentic-ai/</loc>
+    <lastmod>2026-06-07T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/posts/deep-research-agent/</loc>
+    <lastmod>2026-06-07T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/grpo/</loc>
+    <lastmod>2026-06-07T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/post-training/</loc>
+    <lastmod>2026-06-07T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/process-reward-models/</loc>
+    <lastmod>2026-06-07T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/categories/research/</loc>
+    <lastmod>2026-06-07T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/research-agents/</loc>
+    <lastmod>2026-06-07T00:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://rajathpatel23.github.io/tags/architecture/</loc>
     <lastmod>2025-11-29T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/attention/</loc>
+    <loc>https://rajathpatel23.github.io/tags/attention/</loc>
     <lastmod>2025-11-29T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://rajathpatel23.github.io/tags/deep-learning/</loc>
     <lastmod>2025-11-29T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/deep-learning/</loc>
+    <loc>https://rajathpatel23.github.io/tags/gpt/</loc>
     <lastmod>2025-11-29T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/gpt/</loc>
+    <loc>https://rajathpatel23.github.io/posts/gpt_oss_architecture/</loc>
     <lastmod>2025-11-29T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/posts/gpt_oss_architecture/</loc>
+    <loc>https://rajathpatel23.github.io/tags/moe/</loc>
     <lastmod>2025-11-29T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/moe/</loc>
+    <loc>https://rajathpatel23.github.io/tags/transformers/</loc>
     <lastmod>2025-11-29T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://rajathpatel23.github.io/categories/tutorial/</loc>
     <lastmod>2025-11-29T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/categories/technical/</loc>
-    <lastmod>2025-11-29T00:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>http://localhost:1313/tags/transformers/</loc>
-    <lastmod>2025-11-29T00:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>http://localhost:1313/categories/tutorial/</loc>
-    <lastmod>2025-11-29T00:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>http://localhost:1313/posts/attention_mechanism/</loc>
+    <loc>https://rajathpatel23.github.io/posts/attention_mechanism/</loc>
     <lastmod>2025-09-20T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/bpe/</loc>
+    <loc>https://rajathpatel23.github.io/tags/bpe/</loc>
     <lastmod>2025-09-20T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/language-models/</loc>
+    <loc>https://rajathpatel23.github.io/tags/language-models/</loc>
     <lastmod>2025-09-20T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/machine-learning/</loc>
+    <loc>https://rajathpatel23.github.io/tags/nlp/</loc>
     <lastmod>2025-09-20T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/nlp/</loc>
+    <loc>https://rajathpatel23.github.io/tags/tokenization/</loc>
     <lastmod>2025-09-20T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/tokenization/</loc>
+    <loc>https://rajathpatel23.github.io/posts/tokenizers/</loc>
     <lastmod>2025-09-20T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/posts/tokenizers/</loc>
-    <lastmod>2025-09-20T00:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>http://localhost:1313/tags/mdp/</loc>
+    <loc>https://rajathpatel23.github.io/tags/mdp/</loc>
     <lastmod>2025-08-13T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/q-learning/</loc>
+    <loc>https://rajathpatel23.github.io/tags/q-learning/</loc>
     <lastmod>2025-08-13T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/posts/reinforcement-learning-foundations/</loc>
+    <loc>https://rajathpatel23.github.io/posts/reinforcement-learning-foundations/</loc>
     <lastmod>2025-08-13T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/tags/reinforcement-learning/</loc>
-    <lastmod>2025-08-13T00:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://rajathpatel23.github.io/posts/</loc>
     <lastmod>2025-01-27T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/vitae/</loc>
+    <loc>https://rajathpatel23.github.io/vitae/</loc>
     <lastmod>2025-01-27T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/projects/</loc>
+    <loc>https://rajathpatel23.github.io/projects/</loc>
     <lastmod>2025-01-27T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://rajathpatel23.github.io/</loc>
     <lastmod>2025-01-27T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
-    <loc>http://localhost:1313/research/</loc>
+    <loc>https://rajathpatel23.github.io/research/</loc>
     <lastmod>2025-01-27T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

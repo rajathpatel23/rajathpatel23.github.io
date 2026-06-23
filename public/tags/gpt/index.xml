@@ -2,17 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>GPT on Rajat Patel</title>
-    <link>http://localhost:1313/tags/gpt/</link>
+    <link>https://rajathpatel23.github.io/tags/gpt/</link>
     <description>Recent content in GPT on Rajat Patel</description>
     <generator>Hugo -- 0.148.2</generator>
-    <language>en-us</language>
+    <language>en</language>
+    <managingEditor>rpatel12@umbc.edu (Rajat Patel)</managingEditor>
+    <webMaster>rpatel12@umbc.edu (Rajat Patel)</webMaster>
     <lastBuildDate>Sat, 29 Nov 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/gpt/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://rajathpatel23.github.io/tags/gpt/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GPT OSS Style Architectures</title>
-      <link>http://localhost:1313/posts/gpt_oss_architecture/</link>
-      <pubDate>Sat, 29 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/gpt_oss_architecture/</guid>
+      <link>https://rajathpatel23.github.io/posts/gpt_oss_architecture/</link>
+      <pubDate>Sat, 29 Nov 2025 00:00:00 +0000</pubDate><author>rpatel12@umbc.edu (Rajat Patel)</author>
+      <guid>https://rajathpatel23.github.io/posts/gpt_oss_architecture/</guid>
       <description>A personal deep-dive into modern open-source GPT-style language models, covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA, attention sinks), normalization (RMSNorm), feed-forward variants (SwiGLU, MoE), and KV caching.</description>
     </item>
   </channel>
