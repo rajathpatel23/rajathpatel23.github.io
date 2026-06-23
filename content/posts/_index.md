@@ -12,6 +12,7 @@ This collection covers topics in machine learning, statistics, and software engi
 
 ## Machine Learning & Deep Learning
 
+- **[Small ML Sub-Problems Inside Agents](/posts/small-ml-subproblems-inside-agents/)** - How agents decompose into independent ML sub-problems (search, retrieval, classification), each with its own exploit/explore dial and its own signal to optimize
 - **[Evidence-Driven Deep Research Agent](/posts/deep-research-agent/)** - How I built visibility into the research process itself — an explicit evidence state, step-level reward signals, and a planner that uses those signals deliberately. Includes ablation results comparing guided vs baseline planners and the connection to PRMs and GRPO.
 - **[GPT OSS Style Architectures](/posts/gpt_oss_architecture/)** - Deep-dive into modern open-source GPT-style language models covering tokenization, positional embeddings (RoPE), attention optimizations (GQA, SWA), normalization (RMSNorm), and feed-forward variants (MoE)
 - **[Attention Mechanisms in Transformers: MHA vs MQA vs GQA](/posts/attention_mechanism/)** - Comparative analysis of Multi-Head, Multi-Query, and Grouped-Query Attention mechanisms with implementation details and performance trade-offs
