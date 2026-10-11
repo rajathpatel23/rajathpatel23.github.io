@@ -51,6 +51,10 @@ TocOpen: false
   min-width: 0;
 }
 
+.featured-body-full {
+  padding: 22px 24px;
+}
+
 .featured-title {
   font-size: 1.05em;
   font-weight: 700;
@@ -216,6 +220,41 @@ TocOpen: false
 <div class="featured-list">
 
 <div class="featured-card">
+  <img src="/img/project_images/doppel-mark.png" alt="Doppel logo" class="featured-img" style="padding: 36px;" width="300" height="220">
+  <div class="featured-body">
+    <h3 id="doppel" class="featured-title">Doppel: Mentorship &amp; Professional Growth</h3>
+    <p class="featured-desc">A passion project I am building to help early-career professionals connect with mentors and peers, work toward their goals, and support one another's growth. Launched in September 2026 as an invite-first community.</p>
+    <div class="tag-row">
+      <span class="tag">Mentorship</span>
+      <span class="tag">Community</span>
+      <span class="tag">Career Growth</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://www.joindoppel.com" class="btn btn-demo">Visit Doppel</a>
+    </div>
+  </div>
+</div>
+
+<div class="featured-card">
+  <img src="/img/posts/tiny-shakespeare/dpo_lowlr_curves.png" alt="TinyGPT DPO training and evaluation curves showing loss, reward margin, and preference accuracy" class="featured-img" loading="lazy">
+  <div class="featured-body">
+    <h3 id="scratch-nanogpt" class="featured-title">TinyGPT: Pretraining, SFT &amp; DPO</h3>
+    <p class="featured-desc">Built a training pipeline for a 15M-parameter TinyGPT: pretraining on tiny-shakespeare, supervised fine-tuning for single-sentence responses, and DPO with teacher-generated preference pairs. Implemented speaker-based dataset preparation, response-only SFT loss, and preference-pair construction. Evaluated checkpoints using fixed generation prompts alongside loss, reward margin, and preference accuracy.</p>
+    <div class="tag-row">
+      <span class="tag">Post-Training</span>
+      <span class="tag">SFT</span>
+      <span class="tag">DPO</span>
+      <span class="tag">PyTorch</span>
+      <span class="tag">Evaluation</span>
+    </div>
+    <div class="btn-row">
+      <a href="https://github.com/rajathpatel23/post-training-roadmap" class="btn btn-github">GitHub</a>
+      <a href="/posts/tiny-shakespeare-sft-dpo/" class="btn btn-demo">Blog Post</a>
+    </div>
+  </div>
+</div>
+
+<div class="featured-card">
   <img src="/img/deep-research-agent/architecture.png" alt="Evidence-Driven Deep Research Agent architecture" class="featured-img">
   <div class="featured-body">
     <h3 class="featured-title">Evidence-Driven Deep Research Agent</h3>
@@ -237,8 +276,8 @@ TocOpen: false
 <div class="featured-card">
   <img src="/img/project_images/labpilot_demo.jpg" alt="LabPilot demo" class="featured-img">
   <div class="featured-body">
-    <h3 class="featured-title">LabPilot — AI Copilot for R&D Experiment Optimization</h3>
-    <p class="featured-desc">Decision-support loop for R&D labs: surrogate model trained on historical experiment data recommends the next best experiment, with uncertainty quantification and adaptive bandit policies (UCB, LinUCB, greedy). An LLM reasoning layer explains each recommendation; a literature search layer adds source-backed justification. Full session loop — submit observed result, model adapts and recommends next step.</p>
+    <h3 class="featured-title">LabPilot: AI Copilot for R&D Experiment Optimization</h3>
+    <p class="featured-desc">Decision-support loop for R&D labs: surrogate model trained on historical experiment data recommends the next best experiment, with uncertainty quantification and adaptive bandit policies (UCB, LinUCB, greedy). An LLM reasoning layer explains each recommendation; a literature search layer adds source-backed justification. Full session loop: submit observed result, model adapts and recommends next step.</p>
     <div class="tag-row">
       <span class="tag">Bandit Policies</span>
       <span class="tag">Surrogate Modeling</span>
@@ -256,7 +295,7 @@ TocOpen: false
 <div class="featured-card">
   <img src="/img/project_images/emergency-agent.svg" alt="Emergency Guidance Agent FSM" class="featured-img" style="background:#f9fafb;">
   <div class="featured-body">
-    <h3 class="featured-title">Emergency Guidance Agent — CPR Copilot</h3>
+    <h3 class="featured-title">Emergency Guidance Agent: CPR Copilot</h3>
     <p class="featured-desc">Voice-and-video CPR coaching assistant using browser camera and microphone, built on Google Gemini Live. The core design decision: a strict finite state machine controls step transitions across six states (intake → escalation → see_patient → start_compressions → continue_cpr → complete). The model provides real-time guidance within each state; the application enforces the safety sequence. The model cannot advance or skip steps.</p>
     <div class="tag-row">
       <span class="tag">Multimodal</span>
@@ -296,7 +335,7 @@ TocOpen: false
 <div class="compact-card">
   <img src="/img/project_images/CausalEventClassification.png" alt="Causal Event Classification" class="compact-img">
   <div class="compact-body">
-    <div class="badge">2nd Place — F1: 84.36</div>
+    <div class="badge">2nd Place: F1: 84.36</div>
     <h3 class="compact-title">Supervised Contrastive Learning for Causal Event Classification</h3>
     <div class="tag-row">
       <span class="tag">Contrastive Learning</span>
@@ -327,7 +366,7 @@ TocOpen: false
 <div class="compact-card">
   <img src="/img/project_images/HMM.jpg" alt="Hidden Markov Models" class="compact-img">
   <div class="compact-body">
-    <h3 class="compact-title">Hidden Markov Models — Forward-Backward and Viterbi</h3>
+    <h3 class="compact-title">Hidden Markov Models: Forward-Backward and Viterbi</h3>
     <div class="tag-row">
       <span class="tag">Probabilistic Models</span>
       <span class="tag">NLP</span>

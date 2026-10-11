@@ -13,18 +13,20 @@ TocOpen: false
     <img src="/img/new_image_1.jfif" alt="Rajat Patel" style="width: 200px; height: 150px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.12);">
   </div>
   <div style="flex: 1; min-width: 300px;">
-    <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 1.2em; font-weight: 700;">Machine Learning Engineer</h3>
-    <p style="margin: 0 0 5px 0; font-weight: 600; color: #374151;">Chime Financial Inc.</p>
-    <p style="margin: 0 0 15px 0; color: #6b7280; font-style: italic;">San Bruno, CA</p>
+    <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 1.2em; font-weight: 700;">Staff AI Scientist</h3>
+    <p style="margin: 0 0 5px 0; font-weight: 600; color: #374151;">Intuit</p>
+    <p style="margin: 0 0 15px 0; color: #6b7280; font-style: italic;">Mountain View, CA</p>
     <p style="margin: 0; line-height: 1.6; color: #374151;">
-      I work on Trust and Safety, building scalable machine learning systems at the intersection of finance and technology.
+      I work across applied machine learning and software engineering to build useful products.
     </p>
   </div>
 </div>
 
-I am a Machine Learning Engineer at [Chime Financial Inc.](https://www.chime.com/), where I work on Trust and Safety and building out the ML Platform. I joined Chime in November 2023.
+I am a Staff AI Scientist at [Intuit](https://www.intuit.com/), with a background in applied ML and software engineering. At [Chime](https://www.chime.com/), I led ML for card authorization to grow revenue and reduce losses. I also worked on agentic systems and ML infrastructure, and contributed to foundation model tokenization and training.
 
-Prior to Chime, I was a Machine Learning Engineer at [Interos Inc.](https://www.interos.ai/) working on information extraction and NLP models. I also conducted research at [University of Maryland Baltimore County (UMBC)](https://www.umbc.edu/) advised by [Dr. Francis Ferraro](https://www.csee.umbc.edu/~ferraro/) on multi-task learning for knowledge enhancement, and at the University of Maryland School of Medicine under [Dr. Shiming Yang](https://www.medschool.umaryland.edu/profiles/Yang-Shiming/) on deep learning for medical signal processing.
+As an early employee at [Interos](https://www.interos.ai/), I helped build its knowledge graph through information extraction, retrieval, entity linking, relationship detection, and human-in-the-loop feedback.
+
+Outside work, I’m building [Doppel](https://www.joindoppel.com), a passion project helping early-career professionals find mentorship, build connections, and pursue their goals.
 
 ## Education
 
@@ -36,8 +38,11 @@ Prior to Chime, I was a Machine Learning Engineer at [Interos Inc.](https://www.
 
 ## Recent Highlights
 
-- **Started a new Role as Senior Machine Learning Engineer at Chime** *(November 2023)*<br>
-  [Chime Financial Inc.](https://www.chime.com)
+- **Launched [Doppel](https://www.joindoppel.com)** *(September 2026)*<br>
+  A passion project connecting early-career professionals with mentors and peers to help them make progress on their goals.
+
+- **Exploring language model post-training** *(2026)*<br>
+  Studying training objectives and model behavior through hands-on experiments. [Project notes →](/projects/#scratch-nanogpt)
 
 - **Presented Paper at the CASE Workshop 2023**<br>
   [CASE-2023 - Sept 2023](https://aclanthology.org/2023.case-1.8.pdf)
@@ -50,4 +55,4 @@ Prior to Chime, I was a Machine Learning Engineer at [Interos Inc.](https://www.
 
 ## Contact
 
-**Email**: [rpatel12@umbc.edu](mailto:rpatel12@umbc.edu) 
+**Email**: [rpatel12@umbc.edu](mailto:rpatel12@umbc.edu)

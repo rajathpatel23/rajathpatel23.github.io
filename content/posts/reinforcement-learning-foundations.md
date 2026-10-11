@@ -15,9 +15,9 @@ math: true
 
 ## Introduction
 
-Reinforcement Learning (RL) has exploded in popularity — first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don't just help models learn context better; they also improve reasoning by teaching them to "think in steps."
+Reinforcement Learning (RL) has exploded in popularity: first in game-playing agents, and now in large language models via methods like RLHF (Reinforcement Learning from Human Feedback). These approaches don't just help models learn context better; they also improve reasoning by teaching them to "think in steps."
 
-My fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called "tool of the decade." I wanted to go beyond using these models — I wanted to understand *how* they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.
+My fascination with RL began when the GPT-3 paper was published and ChatGPT emerged as the so-called "tool of the decade." I wanted to go beyond using these models: I wanted to understand *how* they work under the hood. That meant building RL concepts from the ground up: deriving equations, implementing toy solutions in environments like CartPole and FrozenLake, and seeing theory come alive in code.
 
 This post is the first in a series where we'll start with **foundations**:
 
@@ -26,13 +26,13 @@ This post is the first in a series where we'll start with **foundations**:
 - How can we move from *knowing* state values to *learning* optimal actions with Q-learning?
 - And how do we scale that to Deep Q-Learning when the state space explodes?
 
-By the end, you'll have a baseline RL toolkit — from mathematical definitions to runnable code — and a clear picture of how these pieces fit together when building agents.
+By the end, you'll have a baseline RL toolkit covering mathematical definitions and runnable code, and a clear picture of how these pieces fit together when building agents.
 
 ## Why This Series?
 
 When I first encountered MDPs, I assumed they were simply an extension of Hidden Markov Models. I quickly learned this was wrong. HMMs deal with hidden states and observations, while MDPs deal with **fully observable** states and decision-making under uncertainty. Understanding this difference changed how I approached RL problems.
 
-This blog is written in a **learning-by-doing** style — meaning you'll see the concepts, math, and code side by side, along with real-world analogies (including fraud detection examples) and small "try-it-yourself" prompts.
+This blog is written in a **learning-by-doing** style: meaning you'll see the concepts, math, and code side by side, along with real-world analogies (including fraud detection examples) and small "try-it-yourself" prompts.
 
 ## Part 1: Foundations with MDPs (and a "HMM aside")
 
@@ -186,9 +186,9 @@ It's a **weighted average** of "reward now + discounted value later" over possib
 
 ## Q-Learning
 
-Knowing **state value** is great—if you also have a **model** of the world to look ahead. But when you don't, you want to know directly: *How good is taking action a in state s right now?* That's the **action-value** ($Q(s,a)$), and **Q-learning** learns it **from experience** with no model required.
+Knowing **state value** is great if you also have a **model** of the world to look ahead. But when you don't, you want to know directly: *How good is taking action a in state s right now?* That's the **action-value** ($Q(s,a)$), and **Q-learning** learns it **from experience** with no model required.
 
-### Tabular Q-Learning — from optimality to an update you can code
+### Tabular Q-Learning: from optimality to an update you can code
 
 #### 1) Objective: optimal action-values
 

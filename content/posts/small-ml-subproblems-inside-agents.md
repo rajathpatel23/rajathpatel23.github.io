@@ -115,5 +115,5 @@ The agent that looks like one system is actually several. Build accordingly.
 
 **Resources**
 
-- [Code — deep-research-agent](https://github.com/rajathpatel23/deep-research-agent)
-- [Slides — Small ML Sub-Problems Inside Agents](https://docs.google.com/presentation/d/1IYo9KBlBe_k2rKSWGdGxDfNOfDVGZBiA5h1p6xkuCPY/edit?usp=sharing)
+- [Code: deep-research-agent](https://github.com/rajathpatel23/deep-research-agent)
+- [Slides: Small ML Sub-Problems Inside Agents](https://docs.google.com/presentation/d/1IYo9KBlBe_k2rKSWGdGxDfNOfDVGZBiA5h1p6xkuCPY/edit?usp=sharing)

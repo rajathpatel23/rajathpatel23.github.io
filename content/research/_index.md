@@ -10,11 +10,9 @@ TocOpen: true
 .post-content h2 { font-size: 1.1em; margin-top: 2em; }
 </style>
 
-I am interested in building AI systems that are useful, adaptive, and reliable in real-world settings.
+My background spans NLP, knowledge graphs, fraud detection, and production ML.
 
-My current focus is on post-training, reward modeling, reinforcement learning, and agentic AI systems. I am especially interested in how learning from feedback, preferences, and verifiable outcomes can make models more steerable and effective after pretraining.
-
-Previously, my work has spanned natural language processing, information extraction, knowledge representation, fraud detection, and production machine learning systems. I care about both the modeling side and the systems side: how models are trained, evaluated, deployed, monitored, and improved in practice.
+I am interested in building self-improving AI systems that work with language and structured data. I’m exploring how feedback, reinforcement learning, and post-training can help these systems adapt and make better decisions. I’m also interested in making autonomous agents more reliable and efficient in production by understanding where they fail, evaluating their behavior, and improving performance over time.
 
 ## Current Interests
 
