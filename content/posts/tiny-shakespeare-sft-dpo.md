@@ -11,9 +11,9 @@ description: "A 15M-parameter model pretrained on tiny-shakespeare, fine-tuned t
 
 I pretrained TinyGPT on tiny-shakespeare, fine-tuned it to say one sentence and stop, then used DPO to prefer a fuller line. TinyGPT has 12 layers, 8 heads, 128-dimensional embeddings, the GPT-2 byte-pair vocabulary, and about 15 million parameters. The pretrained checkpoint is `out_bpe/tinygpt_shakespeare.pt`. DPO at the fine-tuning learning rate raised the metrics and broke the generated text. The run kept here cuts that rate by ten. Every comparison uses `ROMEO:`, `MENENIUS:`, `JULIET:`, and `KING RICHARD III:`.
 
-## The runs
+## The run
 
-DPO was started four times from the fine-tuned checkpoint. I kept the fourth.
+Pretrain the next token, fine-tune to one sentence and a stop, then use DPO to prefer one reply.
 
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
