@@ -80,6 +80,91 @@ body {
     border-radius: 3px;
 }
 
+/* A generated speech, set like a play: name in one column, line in the other. */
+.post-content .folio {
+    margin: 1.6em 0 1.8em;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.post-content .folio .cue {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    column-gap: 1.25rem;
+    align-items: baseline;
+    margin: 0;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.post-content .folio .cue:last-child {
+    border-bottom: 0;
+}
+
+.post-content .folio .who {
+    color: var(--secondary);
+    font-size: 0.92rem;
+    line-height: 1.4;
+}
+
+.post-content .folio .asked .who {
+    color: var(--primary);
+}
+
+.post-content .folio .said {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.55;
+}
+
+@media (max-width: 600px) {
+    .post-content .folio .cue {
+        grid-template-columns: 1fr;
+        row-gap: 0.15rem;
+    }
+}
+
+/* Mermaid sits in the article, not in a code block. */
+.post-content pre.mermaid {
+    background: transparent;
+    color: inherit;
+    border: 0;
+    border-radius: 0;
+    padding: 0.2em 0 0.4em;
+    margin: 1.2em 0 1.6em;
+    overflow-x: auto;
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.post-content .mermaid .node rect,
+.post-content .mermaid .node polygon,
+.post-content .mermaid .node path,
+.post-content .mermaid .label-container {
+    fill: var(--code-bg) !important;
+    stroke: var(--tertiary) !important;
+}
+
+.post-content .mermaid .edgePath path,
+.post-content .mermaid .flowchart-link {
+    stroke: var(--secondary) !important;
+}
+
+.post-content .mermaid .arrowheadPath,
+.post-content .mermaid marker path {
+    fill: var(--secondary) !important;
+    stroke: var(--secondary) !important;
+}
+
+.post-content .mermaid .nodeLabel,
+.post-content .mermaid .nodeLabel p,
+.post-content .mermaid foreignObject,
+.post-content .mermaid foreignObject div {
+    color: var(--primary) !important;
+    font-family: inherit !important;
+    line-height: 1.35;
+}
+
 /* Improve blockquote styling */
 .post-content blockquote {
     font-size: 1.1em;

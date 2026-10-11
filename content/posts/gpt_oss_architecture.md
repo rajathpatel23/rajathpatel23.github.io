@@ -239,7 +239,7 @@ Residual connections (or "skip connections") are the architectural glue that hol
 
 *   **Why They Are Critical**:
     1.  **Combating Vanishing Gradients**: This is the primary reason for their existence. In very deep networks, gradients can shrink exponentially as they are propagated backward from the final layer to the initial layers. This causes the early layers to learn extremely slowly or not at all. The residual connection acts as an "information superhighway," allowing the gradient to flow directly and unimpeded back through the network. This ensures that even the earliest layers receive a strong learning signal.
-    2.  **Preserving Information**: Each sub-layer transforms its input. The residual connection guarantees that the original, untransformed information from the beginning of the block is carried forward. The sub-layer's job is simplified: it only needs to learn the *residual*—the change or update that should be applied to the original vector—rather than the entire transformation from scratch. This makes learning easier and prevents information loss.
+    2.  **Preserving Information**: Each sub-layer transforms its input. The residual connection guarantees that the original, untransformed information from the beginning of the block is carried forward. The sub-layer's job is simplified: it only needs to learn the *residual* (the change or update that should be applied to the original vector) rather than the entire transformation from scratch. This makes learning easier and prevents information loss.
 
 Without residual connections, training transformers with dozens or hundreds of layers would be practically impossible.
 

@@ -10,10 +10,8 @@ TocOpen: true
 
 ### Current Resume
 
-**[Download CV (August 2023)](/files/CV_Rajat_Patel_2023_08.pdf)**
-
-*Latest version of my curriculum vitae, updated August 2023*
+**[Download Resume (PDF)](/files/Rajat_Patel_Resume.pdf)**
 
 ---
 
-For any specific information or questions about my background, experience, or qualifications, please feel free to [contact me](mailto:rpatel12@umbc.edu). 
+For any specific information or questions about my background, experience, or qualifications, please feel free to [contact me](mailto:rpatel12@umbc.edu).
