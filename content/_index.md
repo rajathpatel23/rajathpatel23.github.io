@@ -41,8 +41,9 @@ Outside work, I’m building [Doppel](https://www.joindoppel.com), a passion pro
 - **Launched [Doppel](https://www.joindoppel.com)** *(September 2026)*<br>
   A passion project connecting early-career professionals with mentors and peers to help them make progress on their goals.
 
-- **Exploring language model post-training** *(2026)*<br>
-  Studying training objectives and model behavior through hands-on experiments. [Project notes →](/projects/#scratch-nanogpt)
+- **Joined [Intuit](https://www.intuit.com/)** *(August 2026)*
+
+- **Joined [Chime](https://www.chime.com/)** *(November 2023)*
 
 - **Presented Paper at the CASE Workshop 2023**<br>
   [CASE-2023 - Sept 2023](https://aclanthology.org/2023.case-1.8.pdf)
